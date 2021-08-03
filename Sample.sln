@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB", "DB", "{44851563-2589-4D41-BF1F-14088F73D3A5}"
+	ProjectSection(SolutionItems) = preProject
+		DB\devav.sqlite3 = DB\devav.sqlite3
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DLL", "DLL", "{25168831-E3E3-4AED-B504-F5938BD3DA16}"
+	ProjectSection(SolutionItems) = preProject
+		DLL\EntityFramework.dll = DLL\EntityFramework.dll
+		DLL\System.Data.SQLite.dll = DLL\System.Data.SQLite.dll
+		DLL\System.Data.SQLite.EF6.dll = DLL\System.Data.SQLite.EF6.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{85CDCD0B-87C1-4158-88B3-A028E7E94D32}"
+	ProjectSection(SolutionItems) = preProject
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Html", "Html", "{CE004CD6-7AA8-4462-8109-108DB73DFBE7}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\Html\Contact.html = Assets\Html\Contact.html
+		Assets\Html\ContactInfo.html = Assets\Html\ContactInfo.html
+		Assets\Html\Message.html = Assets\Html\Message.html
+		Assets\Html\MyMessage.html = Assets\Html\MyMessage.html
+		Assets\Html\Menu.html = Assets\Html\Menu.html
+		Assets\Html\SearchPanel.html = Assets\Html\SearchPanel.html
+		Assets\Html\SignIn.html = Assets\Html\SignIn.html
+		Assets\Html\Toolbar.html = Assets\Html\Toolbar.html
+		Assets\Html\TypingBox.html = Assets\Html\TypingBox.html
+		Assets\Html\UserInfo.html = Assets\Html\UserInfo.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Css", "Css", "{16C59495-F085-433C-9BCD-945AFDB94BE8}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\CSS\Contact.css = Assets\CSS\Contact.css
+		Assets\CSS\ContactInfo.css = Assets\CSS\ContactInfo.css
+		Assets\CSS\Message.css = Assets\CSS\Message.css
+		Assets\CSS\MyMessage.css = Assets\CSS\MyMessage.css
+		Assets\CSS\Menu.css = Assets\CSS\Menu.css
+		Assets\CSS\SearchPanel.css = Assets\CSS\SearchPanel.css
+		Assets\CSS\SignIn.css = Assets\CSS\SignIn.css
+		Assets\CSS\Toolbar.css = Assets\CSS\Toolbar.css
+		Assets\CSS\TypingBox.css = Assets\CSS\TypingBox.css
+		Assets\CSS\UserInfo.css = Assets\CSS\UserInfo.css
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.CS", "CS\Messenger.CS.csproj", "{E6BFBFFD-032A-45C9-A874-C074EC1B7EE4}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Messenger.VB", "VB\Messenger.VB.vbproj", "{57F69CA8-D14D-4928-853D-66E4BB2306C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6BFBFFD-032A-45C9-A874-C074EC1B7EE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6BFBFFD-032A-45C9-A874-C074EC1B7EE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6BFBFFD-032A-45C9-A874-C074EC1B7EE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6BFBFFD-032A-45C9-A874-C074EC1B7EE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F69CA8-D14D-4928-853D-66E4BB2306C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F69CA8-D14D-4928-853D-66E4BB2306C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F69CA8-D14D-4928-853D-66E4BB2306C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F69CA8-D14D-4928-853D-66E4BB2306C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE004CD6-7AA8-4462-8109-108DB73DFBE7} = {85CDCD0B-87C1-4158-88B3-A028E7E94D32}
+		{16C59495-F085-433C-9BCD-945AFDB94BE8} = {85CDCD0B-87C1-4158-88B3-A028E7E94D32}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDB845B6-38B5-4176-85B3-0D0D4F1F6D1F}
+	EndGlobalSection
+EndGlobal

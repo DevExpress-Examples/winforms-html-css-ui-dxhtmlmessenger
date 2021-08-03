@@ -1,0 +1,101 @@
+.contact {
+	height: 72px;
+	font-family: Segoe UI;
+	background-color: @window;
+	color: @WindowText;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.container {
+	height: 70px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-grow: 1;
+	border-bottom: solid 2px rgba(60, 60, 60, 0.1);
+	padding-right: 12px;
+}
+
+.contact:hover .container {
+	border-bottom: solid 2px #B0176BD1;
+}
+
+body:focus .container {
+	border-bottom: solid 2px #176BD1;
+}
+
+.avatar-container {
+	padding: 4px;
+	width: 64px;
+	height: 64px;
+}
+
+.avatar {
+	margin: 8px;
+	width: 48px;
+	height: 48px;
+	border-radius: 24px;
+}
+
+.status {
+	margin-top: -64px;
+	margin-left: 48px;
+	width: 8px;
+	height: 8px;
+	border-style: solid;
+	border-width: 4px;
+	border-color: @Window;
+	background-color: #FCA90A;
+	border-radius: 8px;
+}
+
+	.status:active {
+		background-color: #3C925C;
+	}
+
+.contact-info {
+	flex-grow: 1;
+}
+
+.nameAndInfo {
+	display: flex;
+	align-items: center;
+}
+
+.name {
+	font-size: 1.5em;
+}
+
+.info {
+	margin-left: 4px;
+	width: 16px;
+	height: 16px;
+	opacity: 0;
+}
+
+.contact-info:hover .info {
+	opacity: 0.4;
+}
+
+.contact-info .info:hover {
+	opacity: 1;
+}
+
+.time {
+	color: #969696;
+}
+
+.badge {
+	color: @Window;
+	font-weight: bold;
+	width: 24px;
+	height: 24px;
+	border-radius: 100px;
+	background-color: @highlight;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}

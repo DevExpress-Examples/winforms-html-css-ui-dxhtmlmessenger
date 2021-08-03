@@ -1,0 +1,72 @@
+.container {
+	font-family: Segoe UI;
+	background-color: @Window;
+	color: @WindowText;
+	border-style: solid;
+	border-color: rgba(200, 200, 200, 1);
+	border-width: 1px;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	width: 478px;
+	height: 318px;
+}
+
+h1 {
+	padding: 10px;
+	font-weight: bold;
+}
+
+.social-container {
+	padding: 4px;
+}
+
+.social {
+	width: 48px;
+	height: 48px;
+	padding: 10px 10px;
+}
+
+	.social:hover {
+		border-radius: 8px;
+		background-color: #F2F2F2;
+	}
+
+	.social:disabled {
+		opacity: 0.4;
+	}
+
+.pwdInput {
+	padding: 2px;
+	width: 160px;
+	height: 22px;
+	align-content: stretch;
+	border-style: solid;
+	border-color: rgba(60, 60, 60, 0.2);
+	border-width: 1px;
+	border-radius: 8px;
+}
+
+.button {
+	width: 164px;
+	margin-top: 8px;
+	padding: 8px 0;
+	text-align: center;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background-color: #4CAF50;
+	color: White;
+}
+
+	.button:hover {
+		background-color: #4C9F50;
+	}
+
+.aux {
+	color: #FF909090;
+}

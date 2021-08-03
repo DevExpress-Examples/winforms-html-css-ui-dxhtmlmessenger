@@ -1,0 +1,50 @@
+.container {
+	width: 144px;
+	height: 180px;
+}
+
+.menu {
+	font-family: Segoe UI;
+	background-color: @window;
+	color: @WindowText;
+	border-radius: 8px;
+	padding: 8px;
+}
+
+.menuItem {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 12px;
+}
+
+	.menuItem:hover {
+		border-radius: 4px;
+		background-color: #F2F2F2;
+	}
+
+	.menuItem:disabled {
+		color: @DisabledText;
+		opacity: 0.3;
+	}
+
+.separator {
+	border-bottom: solid 1px rgba(60, 60, 60, 0.2);
+	margin: 4px 0px;
+}
+
+.beak {
+	width: 20px;
+	height: 8px;
+	min-width: 20px;
+	max-height: 8px;
+	margin-left: 62px;
+}
+
+.action {
+	width: 16px;
+	height: 16px;
+	min-width: 16px;
+	padding-right: 8px;
+	margin: -4px 0;
+}

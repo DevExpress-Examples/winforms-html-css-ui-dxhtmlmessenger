@@ -1,0 +1,56 @@
+.container {
+	padding: -4px 8px 12px 8px;
+	font-family: Segoe UI;
+	background-color: @window;
+	color: @WindowText;
+	border-style: solid;
+	border-color: rgba(60, 60, 60, 0.2);
+	border-width: 1px;
+	border-radius: 8px;
+	text-align: center;
+}
+
+.contact-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 10px 0px 10px 0px;
+}
+
+.name {
+	margin: 4px;
+	font-size: 1.5em;
+}
+
+.photo {
+	width: 128px;
+	height: 128px;
+	border-radius: 100px;
+}
+
+.button {
+	margin-bottom: -8px;
+	padding: 10px 10px;
+	align-self: flex-end;
+}
+
+	.button:hover {
+		border-radius: 4px;
+		background-color: #F2F2F2;
+	}
+
+	.button:disabled {
+		opacity: 0.4;
+	}
+
+.footer {
+	padding: 10px;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+.separator {
+	margin: 0px 30px 0px 30px;
+	height: 1px;
+	background-color: rgba(60, 60, 60, 0.1);
+}

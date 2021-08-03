@@ -1,0 +1,58 @@
+.container {
+	font-family: Segoe UI;
+	background-color: @window;
+	color: @WindowText;
+	border-style: solid;
+	border-color: rgba(60, 60, 60, 0.2);
+	border-width: 1px;
+	border-radius: 8px;
+}
+
+.contact-info {
+	text-align: center;
+	margin: 10px 0px 10px 0px;
+}
+
+.name {
+	margin: 4px;
+	font-size: 1.5em;
+}
+
+.contact-email {
+	color: @highlight;
+	font-size: 1.1em;
+}
+
+.photo {
+	width: 128px;
+	height: 128px;
+	border-radius: 100px;
+}
+
+.button-panel {
+	margin-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.button {
+	padding: 10px 10px;
+	width: 20px;
+	height: 20px;
+	min-width: 20px;
+}
+
+	.button:hover {
+		border-radius: 4px;
+		background-color: #F2F2F2;
+	}
+
+	.button:disabled {
+		opacity: 0.4;
+	}
+
+.separator {
+	margin: 0px 30px 0px 30px;
+	height: 1px;
+	background-color: rgba(60, 60, 60, 0.1);
+}
