@@ -29,15 +29,15 @@ namespace DXHtmlMessengerSample {
             // Setup Dlls
             DllPath = Path.Combine(Path.GetDirectoryName(dataBaseFilePath), "..", "DLL");
             AppDomain.CurrentDomain.AssemblyResolve += OnCurrentDomainAssemblyResolve;
-            DevAVDataDirectoryHelper.LocalPrefix = "WinOutlookInspiredApp";
+            DevAVDataDirectoryHelper.LocalPrefix = "WinDXHtmlMessengerApp";
         }
         static Assembly OnCurrentDomainAssemblyResolve(object sender, ResolveEventArgs args) {
             string partialName = AssemblyHelper.GetPartialName(args.Name).ToLowerInvariant();
-            if(partialName == "entityframework" || partialName == "system.data.sqlite" || partialName == "system.data.sqlite.ef6") 
+            if(partialName == "entityframework" || partialName == "entityframework.sqlserver" ||
+                partialName == "system.data.sqlite" || partialName == "system.data.sqlite.ef6") 
                 return Assembly.LoadFrom(Path.Combine(DllPath, partialName + ".dll"));
             return null;
         }
-        //
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();

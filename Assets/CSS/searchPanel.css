@@ -1,7 +1,7 @@
 .panel {
 	height: 48px;
 	font-family: Segoe UI;
-	background-color: @window;
+	background-color: @Window;
 	color: @WindowText;
 	display: flex;
 	padding: 0 20px 0 20px;

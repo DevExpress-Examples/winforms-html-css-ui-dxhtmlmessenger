@@ -29,6 +29,7 @@
 	margin-right: 4px;
 	padding: 8px;
 	opacity: 0.75;
+	object-fit:contain;
 }
 
 	.button:hover {

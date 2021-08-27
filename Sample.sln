@@ -11,6 +11,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DLL", "DLL", "{25168831-E3E3-4AED-B504-F5938BD3DA16}"
 	ProjectSection(SolutionItems) = preProject
 		DLL\EntityFramework.dll = DLL\EntityFramework.dll
+		DLL\EntityFramework.SqlServer.dll = DLL\EntityFramework.SqlServer.dll
 		DLL\System.Data.SQLite.dll = DLL\System.Data.SQLite.dll
 		DLL\System.Data.SQLite.EF6.dll = DLL\System.Data.SQLite.EF6.dll
 	EndProjectSection

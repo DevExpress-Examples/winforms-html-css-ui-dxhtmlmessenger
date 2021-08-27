@@ -28,15 +28,9 @@
             private set;
         }
         public void ShowDialog() {
-#if !SKIPAUTHORIZATION
-            // Interact with user in order to perform authorization
             var flyout = this.GetService<IDocumentManagerService>("Flyout");
             var document = flyout.CreateDocument(this);
             document.Show();
-#else
-           // Or provide the access token from local cache without interaction
-#endif
-            SignIn();
         }
         public void SignInViaSocialNetwork() {
             AccessToken = DevExpress.DevAV.Chat.DevAVEmpployeesInMemoryServer.GetPasswordHash(string.Empty, salt);

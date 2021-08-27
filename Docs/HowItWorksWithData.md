@@ -1,3 +1,258 @@
+# Work with data
+
+DXHtmlMessenger has three separate layers — Data Layer, Model and User Interface. The Data Layer communicates with the Model layer using interfaces. This allows you to implement your own Data Layer for DXHtmlMessenger to interact with your own servers, while leaving the Model and UI layers intact.
+
+The following diagram shows the communication between layers
+((((((In short, we use the following abstraction:)))))
+
+```
+ Server                                  Client  
+     [Channel]  --> [Events]   -->  [User Inteface]
+                <-- [Commands] <--
+```
+
+### Server and Channel
+
+The application defines the IMessageServer interface. It contains the Connect method that asynchronously establishes a connection to a specific user by creating a **channel**.
+((((((((((((((((The Server instance provide us with a way to connect to the specific message server's **channel**:))))))))))))))
+
+```cs
+public interface IMessageServer {
+    Task<IChannel> Connect(string userName);
+}
+```
+
+A channel (an IChannel object) returned is associated with a specific user.
+((((((((((((((The channel is associated to the specific user:)))))))))))))))
+
+```cs
+public interface IChannel : IDisposable {
+    string UserName { get; }
+}
+```
+
+
+(((((((((((((The resulting `IChannel` instance provide all the required methods to work with data. Connection is performed asynchronously:)))))))))))))))))))
+The following code uses the Connect method to asynchronously create a channel. The returned object contains methods to work with data.
+
+```cs
+IChannel channel = await server.Connect("Jonh Heart");
+```
+
+When the channel is no longer needed, you can dispose of it:
+```cs
+channel.Dispose();   
+```
+
+The current implementation of the data layer does not require a network connection. A local in-memory server obtains sample data from the DevAV database. All server events are emulated on your local machine.
+((((((((((((((((This specific application's data-layer is implemented as the **in-memory emulation** based on some data from DevAV database.
+All the additional data and server events are generated on the fly based on timer.))))))))))))))
+
+
+The in-memory server is registered at startup, as follows.
+((((((((((((((((((((((The application register this specific implementation in **service container** at startup:))))))))))))))))))
+```cs
+static Program() {
+    // Register global dependencies
+    Data.DevAVEmpployeesInMemoryServer.Register();
+}
+...
+sealed partial class DevAVEmpployeesInMemoryServer : IMessageServer {
+    public static void Register() {
+        DevExpress.Mvvm.ServiceContainer.Default.RegisterService(new DevAVEmpployeesInMemoryServer());
+    }
+}
+```
+
+If you create your own implementation of the data layer, register it here.
+((((((((((((You can register your own implementation of the data layer in the same manner.))))))))))))))
+
+### Channel and Data
+
+
+A channel provides means for two-way communication:
+ - You can listen to the channel's events using the `Subscribe` methods.
+ - You can send commands to the channel using the `Send` method.
+
+
+??????????????????????????
+
+(((((((((((((((The Send/Subscribe methods are methods based on some specific typed arguments(for example MessageEvent/MessageCommand).))))))))))))))))
+
+```cs
+public interface IChannel : IDisposable {
+    // Common
+    void Subscribe(Action<ChannelEvent> onEvent);
+    void Send(ChannelCommand command);
+    // Contacts
+    void Subscribe(Action<Dictionary<long, ContactEvent>> onEvents);
+    // Messages
+    void Subscribe(Action<Dictionary<long, MessageEvent>> onEvents);
+    void Send(MessageCommand command);
+    ...
+}
+```
+
+A channel also contains methods to asynchronously obtain data from the server:
+((((((((((((((((((( .....when the channel is ready)))))))))))))))))))))
+
+```cs
+public interface IChannel : IDisposable {
+    // Contacts
+    Task<UserInfo> GetUserInfo(string userName);
+    Task<UserInfo> GetUserInfo(long id);
+    Task<IReadOnlyCollection<Contact>> GetContacts();
+    // Messages
+    Task<IReadOnlyCollection<Message>> GetHistory(Contact contact);
+}
+```
+
+
+Data is retrieved from the server when the channel is ready, and then it is displayed within the UI layer.
+((((((((((((((((The data objects received from the server is just DTOs which contains the specific data for displaying within the Messenger UI.))))))))))))))))
+
+```cs
+protected override async void OnChannelReady() {
+    Contacts = await Channel.GetContacts();
+}
+```
+
+You can request data again when a specific server-side event is received.
+((((((((((((((((((These data can be requested again if needed or updated locally if some specific event related to server-side changes is received.))))))))))))))))
+
+```cs
+channel.Subscribe(OnMessageEvents);
+//...
+void OnMessageEvents(Dictionary<long, MessageEvent> events) {
+    MessageEvent @event;
+    foreach(Message message in Messages) {
+        if(events.TryGetValue(message.ID, out @event))
+            @event.Apply(message);
+    }
+}
+```
+
+### Events
+
+The first group of events is related to **authentication**:
+((((((((((((First group of events is a common events related to **authentication**. These events are:)))))))))))))))
+
+```cs
+//?????????????????????????????????????
+
+// The server sends this event (((((((((((((((((((((((((((((((((((((((when user access token required for authentication))))))))))))))))))))))))))))
+public class CredentialsRequiredEvent : ChannelEvent { 
+    /* some methods */ 
+}
+
+// The server sends this event when user authentication is complete, and the channel is ready for data requests.
+public class ChannelReadyEvent : ChannelEvent { 
+    /* this event has no data or methods */ 
+}
+```
+
+When a client receives the CredentialsRequiredEvent, it should call the `SetAccessTokenQuery` method. The method specifies **a task** used **to asynchronously provide an access-token** for a specific user:
+
+```cs
+void OnChannelEvent(ChannelEvent @event) {
+    var credentialsRequired = @event as CredentialsRequiredEvent;
+    if(credentialsRequired != null) {
+        var query = AccessTokenQuery(@event.UserName, credentialsRequired.Salt);
+        credentialsRequired.SetAccessTokenQuery(query);
+    }
+}
+
+```
+
+This task can either obtain the access token from the client-side cache, or show a Sign-In dialog to return credentials from the user.
+
+((((((((((((((((This task can encapsulate either the obtaining the access-token from the client-side cache or the interaction with a user
+via showing Sign-In dialog.)))))))))))))))))))))))))
+
+```cs
+Task<string> AccessTokenQuery(string userName, string salt) {
+    var accessTokenQueryCompletionSource = new TaskCompletionSource<string>();
+    dispatcher.BeginInvoke(() => {
+        var signInViewModel = SignInViewModel.Create(userName, salt);
+        signInViewModel.ShowDialog();
+        if(!string.IsNullOrEmpty(signInViewModel.AccessToken))
+            accessTokenQueryCompletionSource.SetResult(signInViewModel.AccessToken);
+        else
+            accessTokenQueryCompletionSource.SetCanceled();
+    });
+    return accessTokenQueryCompletionSource.Task;
+}
+```
+
+The second group of events are data-aware. The server sends them when it encounters changes on the server side:
+
+```cs
+public class StatusChanged : ContactEvent {
+    /* data fields */
+}
+```
+
+??????????????????????????why 'applies' is bold? ??????????????????
+
+When the client receives these events, it applies the changes to corresponding UI controls.
+((((((((((((((((((((On receiving these events the client **applies** the changes t this event direcly to the already loaded data:))))))))))))))))
+
+```cs
+async void OnContactEvents(Dictionary<long, ContactEvent> events) {
+    ContactEvent @event;
+    foreach(Contact contact in Contacts) {
+        if(events.TryGetValue(contact.ID, out @event))
+            @event.Apply(contact);
+    }
+}
+```
+
+### Commands
+
+Commands are sent from clients to the server. For example, a command can initiate a log-off.
+
+(((((((((((((((((((((((The command can be sent from the client-side to manage something on the server side.
+For example to initiate the Log Off:))))))))))))))))))))
+
+```cs
+public void LogOff() {
+    channel.Send(new LogOff(channel));
+}
+```
+
+Another example of a command - is sending a new chat message to the server:
+
+```cs
+public void SendMessage() {
+    if(Channel != null)
+        Channel.Send(new NewMessage(Contact, MessageText));
+    Message = null;
+}
+
+```
+The server should respond to these commands (for instance, update data on the server and send notification events to client channels).
+((((((((((((((The server will process the event and do something like updating server data and notifying client by sending some events into channels.))))))))))))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# old variant
+
+
 # How this application works with data
 
 As we already said, the main idea of this sample is creating the data-layer agnostic app which uses clearly separated layers for Model, Data, and User Interface. 

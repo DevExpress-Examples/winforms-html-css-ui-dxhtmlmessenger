@@ -1,6 +1,5 @@
 ﻿namespace DXHtmlMessengerSample.Views {
     using DevExpress.DevAV.Chat.Model;
-    using DevExpress.Utils.Html.Internal;
     using DevExpress.XtraEditors;
     using DevExpress.XtraGrid.Views.Tile;
     using DXHtmlMessengerSample.ViewModels;
@@ -11,6 +10,10 @@
             if(!mvvmContext.IsDesignMode) {
                 InitializeStyles();
                 InitializeBindings();
+                // Setup default sorting for contacts
+                var colLastActivity = contactsTileView.Columns["LastActivity"];
+                if(colLastActivity != null)
+                    contactsTileView.SortInfo.Add(colLastActivity, DevExpress.Data.ColumnSortOrder.Descending);
             }
         }
         void InitializeStyles() {

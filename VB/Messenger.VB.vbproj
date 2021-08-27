@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{57F69CA8-D14D-4928-853D-66E4BB2306C0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>DXHtmlMessengerSample</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <LangVersion>14</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.DevAV.v21.2.Data" />
+    <Reference Include="DevExpress.Data.Desktop.v21.2" />
+    <Reference Include="DevExpress.Data.v21.2" />
+    <Reference Include="DevExpress.Mvvm.v21.2" />
+    <Reference Include="DevExpress.Printing.v21.2.Core" />
+    <Reference Include="DevExpress.Sparkline.v21.2.Core" />
+    <Reference Include="DevExpress.Utils.v21.2" />
+    <Reference Include="DevExpress.XtraEditors.v21.2" />
+    <Reference Include="DevExpress.XtraBars.v21.2" />
+    <Reference Include="DevExpress.XtraLayout.v21.2" />
+    <Reference Include="DevExpress.XtraGrid.v21.2" />
+    <Reference Include="EntityFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Services\AppSettigns.vb" />
+    <Compile Include="Services\ISettingsService.vb" />
+    <Compile Include="ViewModels\Base\ChannelViewModel.vb" />
+    <Compile Include="ViewModels\ContactsViewModel.vb" />
+    <Compile Include="ViewModels\ContactViewModel.vb" />
+    <Compile Include="ViewModels\Base\UserInfoViewModel.vb" />
+    <Compile Include="ViewModels\SignInViewModel.vb" />
+    <Compile Include="ViewModels\MessagesViewModel.vb" />
+    <Compile Include="ViewModels\MessengerViewModel.vb" />
+    <Compile Include="Program.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="ViewModels\UserViewModel.vb" />
+    <Compile Include="Views\ContactsView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ContactsView.Designer.vb">
+      <DependentUpon>ContactsView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignInView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SignInView.Designer.vb">
+      <DependentUpon>SignInView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessagesView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MessagesView.Designer.vb">
+      <DependentUpon>MessagesView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Messenger.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Messenger.Designer.vb">
+      <DependentUpon>Messenger.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Style.vb" />
+    <EmbeddedResource Include="Views\ContactsView.resx">
+      <DependentUpon>ContactsView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SignInView.resx">
+      <DependentUpon>SignInView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MessagesView.resx">
+      <DependentUpon>MessagesView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Messenger.resx">
+      <DependentUpon>Messenger.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppIcon.svg" />
+    <EmbeddedResource Include="Resources\Close.svg" />
+    <EmbeddedResource Include="Resources\Contact.svg" />
+    <EmbeddedResource Include="Resources\PhoneCall.svg" />
+    <EmbeddedResource Include="Resources\Search.svg" />
+    <EmbeddedResource Include="Resources\Message.svg" />
+    <EmbeddedResource Include="Resources\User.svg" />
+    <EmbeddedResource Include="Resources\VideoCall.svg" />
+    <EmbeddedResource Include="Resources\Send.svg" />
+    <EmbeddedResource Include="Resources\Facebook.svg" />
+    <EmbeddedResource Include="Resources\Google.svg" />
+    <EmbeddedResource Include="Resources\LinkedIn.svg" />
+    <EmbeddedResource Include="Resources\Action.svg" />
+    <EmbeddedResource Include="Resources\Beak.Left.svg" />
+    <EmbeddedResource Include="Resources\Beak.Bottom.svg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

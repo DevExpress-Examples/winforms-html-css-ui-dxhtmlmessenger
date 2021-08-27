@@ -30,15 +30,27 @@
             // Pass the channel into dependent ViewModels
             Messenger.Default.Send(channel);
         }
+        int authCounter = 0;
         void OnChannelEvent(ChannelEvent @event) {
             var credentialsRequired = @event as CredentialsRequiredEvent;
             if(credentialsRequired != null) {
-                var query = AccessTokenQuery(@event.UserName, credentialsRequired.Salt);
-                // asynchronous query of access-token for the specific user
-                credentialsRequired.SetAccessTokenQuery(query);
+                if(0 == authCounter++) {
+                    // provide the access token from local cache without interaction
+                    var cacheQuery = QueryAccessTokenFromLocalAuthCache(@event.UserName, credentialsRequired.Salt);
+                    credentialsRequired.SetAccessTokenQuery(cacheQuery);
+                }
+                else {
+                    // or query access-token asynchronously for the specific user
+                    var userQuery = QueryAccessTokenFromUser(@event.UserName, credentialsRequired.Salt);
+                    credentialsRequired.SetAccessTokenQuery(userQuery);
+                }
             }
         }
-        Task<string> AccessTokenQuery(string userName, string salt) {
+        Task<string> QueryAccessTokenFromLocalAuthCache(string userName, string salt) {
+            // simple emulation of local auth cache
+            return Task.FromResult(DevAVEmpployeesInMemoryServer.GetPasswordHash(string.Empty, salt));
+        }
+        Task<string> QueryAccessTokenFromUser(string userName, string salt) {
             var accessTokenQueryCompletionSource = new TaskCompletionSource<string>();
             dispatcher.BeginInvoke(() => {
                 var signInViewModel = SignInViewModel.Create(userName, salt);

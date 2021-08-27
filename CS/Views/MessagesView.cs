@@ -2,6 +2,7 @@
     using System;
     using System.Drawing;
     using DevExpress.DevAV.Chat.Model;
+    using DevExpress.Utils.Html;
     using DevExpress.XtraEditors;
     using DevExpress.XtraEditors.Controls;
     using DXHtmlMessengerSample.ViewModels;
@@ -53,7 +54,7 @@
             messageMenuPopup.ElementMouseClick += OnMessageMenuElementMouseClick;
         }
         void OnMessagesViewElementMouseClick(object sender, DevExpress.XtraGrid.Views.Items.ItemsViewHtmlElementMouseEventArgs e) {
-            if(e.TagId == "btnAction") {
+            if(e.ElementId == "btnAction") {
                 var size = ScaleDPI.ScaleSize(new Size(144, 180));
                 var menuBounds = new Rectangle(new Point(e.Bounds.X - (size.Width - e.Bounds.Width) / 2, e.Bounds.Y - size.Height), size);
                 messageMenuPopup.Show(gridControl, gridControl.RectangleToScreen(menuBounds));

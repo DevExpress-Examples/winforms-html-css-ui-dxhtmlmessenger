@@ -1,7 +1,7 @@
 .container {
 	padding: -4px 8px 12px 8px;
 	font-family: Segoe UI;
-	background-color: @window;
+	background-color: @Window;
 	color: @WindowText;
 	border-style: solid;
 	border-color: rgba(60, 60, 60, 0.2);
