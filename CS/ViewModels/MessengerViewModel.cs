@@ -22,13 +22,13 @@
             var settingsService = this.GetRequiredService<ISettingsService>();
             var theme = settingsService.Theme ?? "Light";
             var currentUser = settingsService.CurrentUser ?? "John Heart";
-            Title = $"DX HTML MESSENGER (CS) - [{currentUser.ToUpper()}]";
             // Open messenger channel
             var messageServer = this.GetRequiredService<IMessageServer>();
-            channel = await messageServer.Connect(currentUser);
+            channel = await messageServer.Create(currentUser);
             channel.Subscribe(OnChannelEvent);
             // Pass the channel into dependent ViewModels
             Messenger.Default.Send(channel);
+            await dispatcher.BeginInvoke(() => Title = $"DX HTML MESSENGER (CS) - [{currentUser.ToUpper()}]");
         }
         int authCounter = 0;
         void OnChannelEvent(ChannelEvent @event) {

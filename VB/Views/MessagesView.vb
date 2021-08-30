@@ -1,6 +1,4 @@
-﻿Imports DevExpress.DevAV.Chat.Model
-Imports DevExpress.Utils.Html
-Imports DevExpress.XtraEditors
+﻿Imports DevExpress.XtraEditors
 Imports DevExpress.XtraEditors.Controls
 Imports DXHtmlMessengerSample.ViewModels
 
@@ -19,6 +17,7 @@ Namespace DXHtmlMessengerSample.Views
             Styles.Menu.Apply(messageMenuPopup)
             Styles.Toolbar.Apply(toolbarPanel)
             Styles.TypingBox.Apply(typingBox)
+            Styles.NoMessages.Apply(messagesItemsView.EmptyViewHtmlTemplate)
             messagesItemsView.HtmlImages = DXHtmlMessenger.SvgImages
         End Sub
         Sub InitializeBindings()
@@ -28,9 +27,8 @@ Namespace DXHtmlMessengerSample.Views
             fluent.SetBinding(messagesItemsView, Function(mv) mv.FocusedRowObject, Function(x) x.SelectedMessage)
             fluent.SetBinding(toolbarPanel, Function(tp) tp.DataContext, Function(x) x.Contact)
             ' We need update chat when the ViewModel detect changes
-            fluent.SetTrigger(Function(x) x.Messages, Sub(contacts)
-                                                          messagesItemsView.RefreshData()
-                                                      End Sub)
+            fluent.SetTrigger(Function(x) x.Messages, Sub(contacts) messagesItemsView.RefreshData())
+            fluent.SetTrigger(Function(x) x.Contact, Sub(contact) messagesItemsView.ScrollToEnd())
             ' Bind life-cycle events
             fluent.WithEvent(Me, NameOf(HandleCreated)).EventToCommand(Sub(x) x.OnCreate())
             fluent.WithEvent(Me, NameOf(HandleDestroyed)).EventToCommand(Sub(x) x.OnDestroy())
@@ -41,6 +39,7 @@ Namespace DXHtmlMessengerSample.Views
             fluent.BindCommandToElement(toolbarPanel, "btnUser", Sub(x) x.ShowUser())
             ' Bind typingBox elements
             fluent.BindCommandToElement(typingBox, "btnSend", Sub(x) x.SendMessage())
+            fluent.WithKey(messageEdit, Keys.Control Or Keys.Enter).KeyToCommand(Sub(x) x.SendMessage())
             ' Bind editors
             fluent.SetObjectDataSourceBinding(messageBindingSource, Sub(x) x.Update())
             ' Bind context items
@@ -50,18 +49,13 @@ Namespace DXHtmlMessengerSample.Views
             fluent.BindCommandToElement(messageMenuPopup, "miDelete", Sub(x) x.DeleteMessage())
             ' Bind popup menu showing/hiding
             AddHandler messagesItemsView.ElementMouseClick, AddressOf OnMessagesViewElementMouseClick
-            AddHandler messageMenuPopup.ElementMouseClick, AddressOf OnMessageMenuElementMouseClick
         End Sub
         Sub OnMessagesViewElementMouseClick(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.ItemsViewHtmlElementMouseEventArgs)
-            If e.ElementId = "btnAction" Then
-                Dim size = ScaleDPI.ScaleSize(New Size(144, 180))
-                Dim menuBounds = New Rectangle(New Point(e.Bounds.X - (size.Width - e.Bounds.Width) \ 2, e.Bounds.Y - size.Height), size)
-                messageMenuPopup.Show(gridControl, gridControl.RectangleToScreen(menuBounds))
-            End If
-        End Sub
-        Sub OnMessageMenuElementMouseClick(ByVal sender As Object, ByVal e As HtmlElementMouseEventArgs)
-            If IsHandleCreated Then
-                BeginInvoke(New Action(AddressOf messageMenuPopup.Hide))
+            If e.ElementId = "btnMore" Then
+                Dim size = ScaleDPI.ScaleSize(New Size(192, 180))
+                Dim location = New Point(e.Bounds.X - (size.Width - e.Bounds.Width) \ 2, e.Bounds.Y - size.Height + ScaleDPI.ScaleVertical(8))
+                Dim menuScreenBounds = gridControl.RectangleToScreen(New Rectangle(location, size))
+                messageMenuPopup.Show(gridControl, menuScreenBounds)
             End If
         End Sub
         Sub InitializeMessageEdit()
@@ -73,8 +67,8 @@ Namespace DXHtmlMessengerSample.Views
             Dim contentSize = typingBox.GetContentSize()
             typingBox.Height = contentSize.Height
         End Sub
-        Sub OnQueryItemTemplate(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.QueryItemTemplateArgs) Handles messagesItemsView.QueryItemTemplate
-            Dim message = TryCast(e.Row, Message)
+        Sub OnQueryItemTemplate(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs) Handles messagesItemsView.QueryItemTemplate
+            Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
             If message Is Nothing Then
                 Return
             End If
@@ -87,7 +81,7 @@ Namespace DXHtmlMessengerSample.Views
             fluent.ViewModel.OnMessageRead(message)
         End Sub
         Sub OnCustomizeItem(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
-            Dim message = TryCast(e.Row, Message)
+            Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
             If message Is Nothing OrElse message.IsFirstMessageOfBlock Then
                 Return
             End If
@@ -112,6 +106,7 @@ Namespace DXHtmlMessengerSample.Views
             Public Shared Toolbar As Style = New ToolbarStyle()
             Public Shared Message As Style = New MessageStyle()
             Public Shared MyMessage As Style = New MyMessageStyle()
+            Public Shared NoMessages As Style = New NoMessagesStyle()
             Public Shared Menu As Style = New MenuStyle()
             Public Shared TypingBox As Style = New TypingBoxStyle()
             '
@@ -128,6 +123,9 @@ Namespace DXHtmlMessengerSample.Views
                 Inherits Style
             End Class
             Private NotInheritable Class TypingBoxStyle
+                Inherits Style
+            End Class
+            Private NotInheritable Class NoMessagesStyle
                 Inherits Style
             End Class
         End Class

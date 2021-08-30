@@ -16,7 +16,7 @@
             MyBase.Dispose(disposing)
         End Sub
 
-        #Region "Component Designer generated code"
+#Region "Component Designer generated code"
 
         ''' <summary> 
         ''' Required method for Designer support - do not modify 
@@ -53,7 +53,7 @@
             ' 
             ' tablePanel
             ' 
-            Me.tablePanel.Columns.AddRange(New DevExpress.Utils.Layout.TablePanelColumn() { New DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F)})
+            Me.tablePanel.Columns.AddRange(New DevExpress.Utils.Layout.TablePanelColumn() {New DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1.0F)})
             Me.tablePanel.Controls.Add(Me.typingBox)
             Me.tablePanel.Controls.Add(Me.toolbarPanel)
             Me.tablePanel.Controls.Add(Me.gridControl)
@@ -62,9 +62,9 @@
             Me.tablePanel.Margin = New System.Windows.Forms.Padding(0)
             Me.tablePanel.Name = "tablePanel"
             Me.tablePanel.Rows.AddRange(New DevExpress.Utils.Layout.TablePanelRow() {
-                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 49F),
-                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F),
-                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.AutoSize, 1F)
+                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 49.0F),
+                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1.0F),
+                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.AutoSize, 1.0F)
             })
             Me.tablePanel.Size = New System.Drawing.Size(430, 600)
             Me.tablePanel.TabIndex = 1
@@ -88,6 +88,7 @@
             ' messageMenuPopup
             ' 
             Me.messageMenuPopup.ContainerControl = Me
+            Me.messageMenuPopup.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True
             Me.messageMenuPopup.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True
             ' 
             ' toolbarPanel
@@ -112,17 +113,14 @@
             Me.tablePanel.SetRow(Me.gridControl, 1)
             Me.gridControl.Size = New System.Drawing.Size(430, 493)
             Me.gridControl.TabIndex = 0
-            Me.gridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() { Me.messagesItemsView})
+            Me.gridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.messagesItemsView})
             ' 
             ' messagesItemsView
             ' 
             Me.messagesItemsView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-            Me.messagesItemsView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() { Me.colUserName, Me.colAvatar, Me.colText, Me.colStatusText})
+            Me.messagesItemsView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.colUserName, Me.colAvatar, Me.colText, Me.colStatusText})
             Me.messagesItemsView.GridControl = Me.gridControl
-            Me.messagesItemsView.LayoutOptions.Stack.Orientation = System.Windows.Forms.Orientation.Vertical
             Me.messagesItemsView.Name = "messagesItemsView"
-            Me.messagesItemsView.Styles = Nothing
-            Me.messagesItemsView.Template = Nothing
             ' 
             ' colUserName
             ' 
@@ -170,7 +168,7 @@
             ' 
             ' MessagesView
             ' 
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(96F, 96F)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0F, 96.0F)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.Controls.Add(Me.tablePanel)
             Me.Margin = New System.Windows.Forms.Padding(0)
@@ -190,7 +188,7 @@
             Me.ResumeLayout(False)
 
         End Sub
-        #End Region
+#End Region
 
         Private tablePanel As DevExpress.Utils.Layout.TablePanel
         Private toolbarPanel As DevExpress.XtraEditors.HtmlContentControl

@@ -1,6 +1,8 @@
-﻿namespace DevExpress.DevAV.Chat.Commands {
-    using System;
-    using DevExpress.DevAV.Chat.Model;
+﻿using System;
+using DevExpress.DevAV.Chat.Model;
+
+
+namespace DevExpress.DevAV.Chat.Commands {
 
     public abstract class ContactCommand {
         public Contact Contact {

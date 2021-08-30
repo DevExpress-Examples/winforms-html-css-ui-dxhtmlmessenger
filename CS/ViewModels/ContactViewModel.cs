@@ -14,9 +14,14 @@
         protected ContactViewModel(UserInfo contact)
             : base(contact) {
         }
+        public void MailTo() {
+            var msgService = this.GetRequiredService<IMessageBoxService>();
+            msgService.ShowMessage("Mail To: " + Email);
+        }
         public void VideoCall() {
             var msgService = this.GetRequiredService<IMessageBoxService>();
-            msgService.ShowMessage("Video Call: " + MobilePhone);
+            int index = Email.IndexOf('@');
+            msgService.ShowMessage("Video Call: " + Email.Substring(0, index));
         }
         public void PhoneCall() {
             var msgService = this.GetRequiredService<IMessageBoxService>();
@@ -24,7 +29,7 @@
         }
         public void TextMessage() {
             CloseDocument();
-            Messenger.Default.Send(new Contact(Id));
+            Messenger.Default.Send(new Contact(Id, Name, Photo));
         }
     }
 }

@@ -31,6 +31,8 @@
             this.gridControl = new DevExpress.XtraGrid.GridControl();
             this.contactsTileView = new DevExpress.XtraGrid.Views.Tile.TileView();
             this.mvvmContext = new DevExpress.Utils.MVVM.MVVMContext(this.components);
+            this.contactMenuPopup = new DevExpress.XtraEditors.HtmlContentPopup(this.components);
+            this.contactTooltip = new DevExpress.XtraEditors.HtmlContentPopup(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tablePanel)).BeginInit();
             this.tablePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchPanel)).BeginInit();
@@ -39,6 +41,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.contactsTileView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mvvmContext)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactMenuPopup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactTooltip)).BeginInit();
             this.SuspendLayout();
             // 
             // tablePanel
@@ -102,6 +106,7 @@
             this.contactsTileView.GridControl = this.gridControl;
             this.contactsTileView.Name = "contactsTileView";
             this.contactsTileView.OptionsList.DrawItemSeparators = DevExpress.XtraGrid.Views.Tile.DrawItemSeparatorsMode.None;
+            this.contactsTileView.OptionsTiles.AllowPressAnimation = false;
             this.contactsTileView.OptionsTiles.GroupTextPadding = new System.Windows.Forms.Padding(0);
             this.contactsTileView.OptionsTiles.HighlightFocusedTileStyle = DevExpress.XtraGrid.Views.Tile.HighlightFocusedTileStyle.None;
             this.contactsTileView.OptionsTiles.IndentBetweenGroups = 0;
@@ -120,6 +125,22 @@
             this.mvvmContext.ContainerControl = this;
             this.mvvmContext.ViewModelType = typeof(DXHtmlMessengerSample.ViewModels.ContactsViewModel);
             // 
+            // contactMenuPopup
+            // 
+            this.contactMenuPopup.ContainerControl = this;
+            this.contactMenuPopup.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True;
+            this.contactMenuPopup.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
+            // 
+            // contactTooltip
+            // 
+            this.contactTooltip.AutoHidingDelay = 2500;
+            this.contactTooltip.ContainerControl = this;
+            this.contactTooltip.HideAutomatically = DevExpress.Utils.DefaultBoolean.True;
+            this.contactTooltip.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True;
+            this.contactTooltip.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
+            this.contactTooltip.ViewModelType = typeof(DXHtmlMessengerSample.ViewModels.ContactViewModel);
+            this.contactTooltip.ViewModelSet += new DevExpress.Utils.MVVM.ViewModelSetEventHandler(OnContactTooltipViewModelSet);
+            // 
             // ContactsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -136,6 +157,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.contactsTileView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mvvmContext)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactMenuPopup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contactTooltip)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -147,5 +170,7 @@
         private DevExpress.XtraGrid.GridControl gridControl;
         private DevExpress.XtraGrid.Views.Tile.TileView contactsTileView;
         private DevExpress.Utils.MVVM.MVVMContext mvvmContext;
+        private DevExpress.XtraEditors.HtmlContentPopup contactMenuPopup;
+        private DevExpress.XtraEditors.HtmlContentPopup contactTooltip;
     }
 }

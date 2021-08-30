@@ -1,8 +1,9 @@
-﻿namespace DevExpress.DevAV.Chat.Model {
-    using System;
-    using System.Collections.Concurrent;
-    using System.ComponentModel;
-    using System.Drawing;
+﻿using System;
+using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Drawing;
+
+namespace DevExpress.DevAV.Chat.Model {
 
     public class Contact {
         [Browsable(false)]

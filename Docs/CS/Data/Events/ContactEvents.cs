@@ -1,6 +1,7 @@
-﻿namespace DevExpress.DevAV.Chat.Events {
-    using System;
-    using DevExpress.DevAV.Chat.Model;
+﻿using System;
+using DevExpress.DevAV.Chat.Model;
+
+namespace DevExpress.DevAV.Chat.Events {
 
     public abstract class ContactEvent {
         public long Id {

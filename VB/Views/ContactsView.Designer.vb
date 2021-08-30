@@ -16,7 +16,7 @@
             MyBase.Dispose(disposing)
         End Sub
 
-        #Region "Component Designer generated code"
+#Region "Component Designer generated code"
 
         ''' <summary> 
         ''' Required method for Designer support - do not modify 
@@ -31,6 +31,8 @@
             Me.gridControl = New DevExpress.XtraGrid.GridControl()
             Me.contactsTileView = New DevExpress.XtraGrid.Views.Tile.TileView()
             Me.mvvmContext = New DevExpress.Utils.MVVM.MVVMContext(Me.components)
+            Me.contactMenuPopup = New DevExpress.XtraEditors.HtmlContentPopup(Me.components)
+            Me.contactTooltip = New DevExpress.XtraEditors.HtmlContentPopup(Me.components)
             DirectCast(Me.tablePanel, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.tablePanel.SuspendLayout()
             DirectCast(Me.searchPanel, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -39,11 +41,13 @@
             DirectCast(Me.gridControl, System.ComponentModel.ISupportInitialize).BeginInit()
             DirectCast(Me.contactsTileView, System.ComponentModel.ISupportInitialize).BeginInit()
             DirectCast(Me.mvvmContext, System.ComponentModel.ISupportInitialize).BeginInit()
+            DirectCast(Me.contactMenuPopup, System.ComponentModel.ISupportInitialize).BeginInit()
+            DirectCast(Me.contactTooltip, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SuspendLayout()
             ' 
             ' tablePanel
             ' 
-            Me.tablePanel.Columns.AddRange(New DevExpress.Utils.Layout.TablePanelColumn() { New DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F)})
+            Me.tablePanel.Columns.AddRange(New DevExpress.Utils.Layout.TablePanelColumn() {New DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1.0F)})
             Me.tablePanel.Controls.Add(Me.searchPanel)
             Me.tablePanel.Controls.Add(Me.gridControl)
             Me.tablePanel.Dock = System.Windows.Forms.DockStyle.Fill
@@ -51,8 +55,8 @@
             Me.tablePanel.Margin = New System.Windows.Forms.Padding(0)
             Me.tablePanel.Name = "tablePanel"
             Me.tablePanel.Rows.AddRange(New DevExpress.Utils.Layout.TablePanelRow() {
-                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 49F),
-                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F)
+                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 49.0F),
+                New DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1.0F)
             })
             Me.tablePanel.Size = New System.Drawing.Size(270, 600)
             Me.tablePanel.TabIndex = 1
@@ -93,7 +97,7 @@
             Me.tablePanel.SetRow(Me.gridControl, 1)
             Me.gridControl.Size = New System.Drawing.Size(270, 551)
             Me.gridControl.TabIndex = 0
-            Me.gridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() { Me.contactsTileView})
+            Me.gridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.contactsTileView})
             ' 
             ' contactsTileView
             ' 
@@ -117,9 +121,24 @@
             Me.mvvmContext.ContainerControl = Me
             Me.mvvmContext.ViewModelType = GetType(DXHtmlMessengerSample.ViewModels.ContactsViewModel)
             ' 
+            ' contactMenuPopup
+            ' 
+            Me.contactMenuPopup.ContainerControl = Me
+            Me.contactMenuPopup.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True
+            Me.contactMenuPopup.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True
+            ' 
+            ' contactTooltip
+            ' 
+            Me.contactTooltip.AutoHidingDelay = 2500
+            Me.contactTooltip.ContainerControl = Me
+            Me.contactTooltip.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True
+            Me.contactTooltip.HideAutomatically = DevExpress.Utils.DefaultBoolean.True
+            Me.contactTooltip.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True
+            Me.contactTooltip.ViewModelType = GetType(DXHtmlMessengerSample.ViewModels.ContactViewModel)
+            ' 
             ' ContactsView
             ' 
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(96F, 96F)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0F, 96.0F)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.Controls.Add(Me.tablePanel)
             Me.Margin = New System.Windows.Forms.Padding(0)
@@ -133,10 +152,12 @@
             DirectCast(Me.gridControl, System.ComponentModel.ISupportInitialize).EndInit()
             DirectCast(Me.contactsTileView, System.ComponentModel.ISupportInitialize).EndInit()
             DirectCast(Me.mvvmContext, System.ComponentModel.ISupportInitialize).EndInit()
+            DirectCast(Me.contactMenuPopup, System.ComponentModel.ISupportInitialize).EndInit()
+            DirectCast(Me.contactTooltip, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
 
         End Sub
-        #End Region
+#End Region
 
         Private tablePanel As DevExpress.Utils.Layout.TablePanel
         Private searchPanel As DevExpress.XtraEditors.HtmlContentControl
@@ -144,5 +165,7 @@
         Private gridControl As DevExpress.XtraGrid.GridControl
         Private WithEvents contactsTileView As DevExpress.XtraGrid.Views.Tile.TileView
         Private mvvmContext As DevExpress.Utils.MVVM.MVVMContext
+        Private contactMenuPopup As DevExpress.XtraEditors.HtmlContentPopup
+        Private WithEvents contactTooltip As DevExpress.XtraEditors.HtmlContentPopup
     End Class
 End Namespace

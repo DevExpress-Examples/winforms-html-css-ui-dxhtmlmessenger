@@ -1,6 +1,7 @@
-﻿namespace DevExpress.DevAV.Chat.Model {
-    using System;
-    using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+
+namespace DevExpress.DevAV.Chat.Model {
 
     public class Message {
         [Browsable(false)]

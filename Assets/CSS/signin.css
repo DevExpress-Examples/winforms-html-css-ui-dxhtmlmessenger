@@ -1,11 +1,6 @@
 .container {
-	font-family: Segoe UI;
 	background-color: @Window;
 	color: @WindowText;
-	border-style: solid;
-	border-color: rgba(200, 200, 200, 1);
-	border-width: 1px;
-	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -13,6 +8,8 @@
 	justify-content: center;
 	width: 478px;
 	height: 318px;
+	border: solid 1px @WindowText/0.2;
+	border-radius: 8px;
 }
 
 h1 {
@@ -28,15 +25,17 @@ h1 {
 	width: 48px;
 	height: 48px;
 	padding: 10px 10px;
+	opacity:0.8;
 }
 
 	.social:hover {
 		border-radius: 8px;
-		background-color: #F2F2F2;
+		background-color: @Control;
+		opacity: 1;
 	}
 
 	.social:disabled {
-		opacity: 0.4;
+		opacity: 0.25;
 	}
 
 .pwdInput {
@@ -45,7 +44,7 @@ h1 {
 	height: 22px;
 	align-content: stretch;
 	border-style: solid;
-	border-color: rgba(60, 60, 60, 0.2);
+	border-color: @WindowText/0.2;
 	border-width: 1px;
 	border-radius: 8px;
 }
@@ -59,14 +58,14 @@ h1 {
 	align-items: center;
 	justify-content: center;
 	border-radius: 8px;
-	background-color: #4CAF50;
+	background-color: @Green;
 	color: White;
 }
 
 	.button:hover {
-		background-color: #4C9F50;
+		background-color: @Green/0.75;
 	}
 
 .aux {
-	color: #FF909090;
+	color: @DisabledText;
 }

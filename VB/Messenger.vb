@@ -1,21 +1,28 @@
-﻿Imports DevExpress.Utils.MVVM.Services
+﻿Imports DevExpress.LookAndFeel
+Imports DevExpress.Utils.MVVM.Services
+Imports DevExpress.XtraBars
 Imports DevExpress.XtraBars.Docking2010.Customization
 Imports DevExpress.XtraBars.Docking2010.Views.WindowsUI
+Imports DevExpress.XtraBars.ToolbarForm
 Imports DevExpress.XtraEditors
 Imports DXHtmlMessengerSample.ViewModels
 Imports DXHtmlMessengerSample.Views
 
 Namespace DXHtmlMessengerSample
     Partial Public Class MessengerForm
-        Inherits XtraForm
+        Inherits ToolbarForm
         Public Sub New()
             InitializeComponent()
             If Not mvvmContext.IsDesignMode Then
-                Styles.ContactInfo.Apply(contactInfoPopup)
-                Styles.UserInfo.Apply(userInfoPopup)
+                InitializeStyles()
                 InitializeNavigation()
                 InitializeBindings()
             End If
+        End Sub
+        Sub InitializeStyles()
+            darkThemeBBI.ImageOptions.SvgImage = DXHtmlMessenger.SvgImages("DarkTheme")
+            Styles.ContactInfo.Apply(contactInfoPopup)
+            Styles.UserInfo.Apply(userInfoPopup)
         End Sub
         Sub InitializeNavigation()
             ' Flyout Service for all child views
@@ -32,7 +39,7 @@ Namespace DXHtmlMessengerSample
             userInfoDialog.ShowMode = WindowService.WindowShowMode.Modal
             userInfoDialog.WindowStyle = Sub(window)
                                              Dim popup = TryCast(window, IPopupWindow)
-                                             popup.PopupSize = New Size(400, 300)
+                                             popup.PopupSize = New Size(516, 306)
                                              popup.DestroyOnHide = False
                                          End Sub
             mvvmContext.RegisterDefaultService("UserInfoDialog", userInfoDialog)
@@ -40,7 +47,7 @@ Namespace DXHtmlMessengerSample
             Dim contactInfoFlyout = contactInfoPopup.CreateWindowService()
             contactInfoFlyout.WindowStyle = Sub(window)
                                                 Dim popup = TryCast(window, IPopupWindow)
-                                                popup.PopupSize = New Size(400, 300)
+                                                popup.PopupSize = New Size(368, 374)
                                             End Sub
             mvvmContext.RegisterDefaultService("ContactInfoFlyout", contactInfoFlyout)
         End Sub
@@ -67,9 +74,19 @@ Namespace DXHtmlMessengerSample
         End Sub
         Sub contactInfoPopup_ViewModelSet(ByVal sender As Object, ByVal e As DevExpress.Utils.MVVM.ViewModelSetEventArgs) Handles contactInfoPopup.ViewModelSet
             Dim fluent = contactInfoPopup.OfType(Of ContactViewModel)()
+            fluent.BindCommand("lnkEmail", Sub(x) x.MailTo())
             fluent.BindCommand("btnPhoneCall", Sub(x) x.PhoneCall())
             fluent.BindCommand("btnVideoCall", Sub(x) x.VideoCall())
             fluent.BindCommand("btnMessage", Sub(x) x.TextMessage())
+        End Sub
+        Dim isDarkTheme As Boolean
+        Sub OnDarkThemeClick(ByVal sender As Object, ByVal e As ItemClickEventArgs) Handles darkThemeBBI.ItemClick
+            isDarkTheme = Not isDarkTheme
+            If isDarkTheme Then
+                WindowsFormsSettings.DefaultLookAndFeel.SetSkinStyle(SkinStyle.Bezier, SkinSvgPalette.Bezier.ArtHouse)
+            Else
+                WindowsFormsSettings.DefaultLookAndFeel.SetSkinStyle(SkinStyle.Bezier, SkinSvgPalette.Bezier.Default)
+            End If
         End Sub
         Private NotInheritable Class Styles
             Public Shared ContactInfo As Style = New ContactInfoStyle()

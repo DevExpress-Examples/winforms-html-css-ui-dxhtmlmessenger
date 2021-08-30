@@ -1,10 +1,12 @@
-﻿namespace DevExpress.DevAV.Chat {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using DevExpress.DevAV.Chat.Commands;
-    using DevExpress.DevAV.Chat.Events;
-    using DevExpress.DevAV.Chat.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DevExpress.DevAV.Chat.Commands;
+using DevExpress.DevAV.Chat.Events;
+using DevExpress.DevAV.Chat.Model;
+
+
+namespace DevExpress.DevAV.Chat {
 
     public interface IMessageServer {
         Task<IChannel> Connect(string userName);

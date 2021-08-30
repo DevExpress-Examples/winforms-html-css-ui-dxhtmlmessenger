@@ -16,9 +16,8 @@
     <TargetFrameworkProfile />
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>On</OptionStrict>
+    <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
-    <LangVersion>14</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -29,6 +28,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +38,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.DevAV.v21.2.Data" />
@@ -51,7 +52,10 @@
     <Reference Include="DevExpress.XtraBars.v21.2" />
     <Reference Include="DevExpress.XtraLayout.v21.2" />
     <Reference Include="DevExpress.XtraGrid.v21.2" />
-    <Reference Include="EntityFramework" />
+    <Reference Include="EntityFramework">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -137,6 +141,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -148,10 +153,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\AppIcon.svg" />
+    <EmbeddedResource Include="Resources\DarkTheme.svg" />
     <EmbeddedResource Include="Resources\Close.svg" />
     <EmbeddedResource Include="Resources\Contact.svg" />
     <EmbeddedResource Include="Resources\PhoneCall.svg" />
@@ -163,7 +166,8 @@
     <EmbeddedResource Include="Resources\Facebook.svg" />
     <EmbeddedResource Include="Resources\Google.svg" />
     <EmbeddedResource Include="Resources\LinkedIn.svg" />
-    <EmbeddedResource Include="Resources\Action.svg" />
+    <EmbeddedResource Include="Resources\Menu.svg" />
+    <EmbeddedResource Include="Resources\Like.svg" />
     <EmbeddedResource Include="Resources\Beak.Left.svg" />
     <EmbeddedResource Include="Resources\Beak.Bottom.svg" />
   </ItemGroup>

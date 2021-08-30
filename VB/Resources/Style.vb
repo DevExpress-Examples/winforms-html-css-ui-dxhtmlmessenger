@@ -1,6 +1,6 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports System.Collections.Concurrent
 Imports System.IO
-Imports System.Collections.Concurrent
+Imports DevExpress.XtraEditors
 
 Namespace DXHtmlMessengerSample.Views
     Friend MustInherit Class Style
@@ -43,7 +43,7 @@ Namespace DXHtmlMessengerSample.Views
         End Property
 #Region "ReadText"
         Private Shared ReadOnly texts As New ConcurrentDictionary(Of String, String)()
-        Shared Function ReadText(ByVal fileName As String, ByVal type As String) As String
+        Private Shared Function ReadText(ByVal fileName As String, ByVal type As String) As String
             Dim filePath = Path.Combine(DXHtmlMessenger.AssetsPath, $"{type}\{fileName}.{type}")
             Return texts.GetOrAdd(filePath, Function(x) File.ReadAllText(x))
         End Function
@@ -51,13 +51,13 @@ Namespace DXHtmlMessengerSample.Views
 #Region "Apply"
         Public Sub Apply(ByVal control As HtmlContentControl)
             control.HtmlImages = DXHtmlMessenger.SvgImages
-            control.Template = Html
-            control.Styles = Css
+            control.HtmlTemplate.Template = Html
+            control.HtmlTemplate.Styles = Css
         End Sub
         Public Sub Apply(ByVal popup As HtmlContentPopup)
             popup.HtmlImages = DXHtmlMessenger.SvgImages
-            popup.Template = Html
-            popup.Styles = Css
+            popup.HtmlTemplate.Template = Html
+            popup.HtmlTemplate.Styles = Css
         End Sub
         Public Sub Apply(ByVal template As DevExpress.Utils.Html.HtmlTemplate)
             template.Template = Html

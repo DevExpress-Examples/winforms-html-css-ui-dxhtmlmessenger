@@ -19,6 +19,7 @@ Namespace DXHtmlMessengerSample.ViewModels
             MyBase.New(user)
         End Sub
         Public Sub LogOff()
+            CloseDocument()
             Dim messenger = Me.GetParentViewModel(Of MessengerViewModel)()
             If messenger IsNot Nothing Then
                 messenger.LogOff()

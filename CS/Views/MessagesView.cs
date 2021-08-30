@@ -1,8 +1,6 @@
 ﻿namespace DXHtmlMessengerSample.Views {
-    using System;
     using System.Drawing;
-    using DevExpress.DevAV.Chat.Model;
-    using DevExpress.Utils.Html;
+    using System.Windows.Forms;
     using DevExpress.XtraEditors;
     using DevExpress.XtraEditors.Controls;
     using DXHtmlMessengerSample.ViewModels;
@@ -20,6 +18,7 @@
             Styles.Menu.Apply(messageMenuPopup);
             Styles.Toolbar.Apply(toolbarPanel);
             Styles.TypingBox.Apply(typingBox);
+            Styles.NoMessages.Apply(messagesItemsView.EmptyViewHtmlTemplate);
             messagesItemsView.HtmlImages = DXHtmlMessenger.SvgImages;
         }
         void InitializeBindings() {
@@ -30,6 +29,7 @@
             fluent.SetBinding(toolbarPanel, tp => tp.DataContext, x => x.Contact);
             // We need update chat when the ViewModel detect changes
             fluent.SetTrigger(x => x.Messages, contacts => messagesItemsView.RefreshData());
+            fluent.SetTrigger(x => x.Contact, contact => messagesItemsView.ScrollToEnd());
             // Bind life-cycle events
             fluent.WithEvent(this, nameof(HandleCreated))
                 .EventToCommand(x => x.OnCreate);
@@ -42,6 +42,8 @@
             fluent.BindCommandToElement(toolbarPanel, "btnUser", x => x.ShowUser);
             // Bind typingBox elements
             fluent.BindCommandToElement(typingBox, "btnSend", x => x.SendMessage);
+            fluent.WithKey(messageEdit, Keys.Control | Keys.Enter)
+                .KeyToCommand(x => x.SendMessage);
             // Bind editors
             fluent.SetObjectDataSourceBinding(messageBindingSource, x => x.Update);
             // Bind context items
@@ -51,17 +53,16 @@
             fluent.BindCommandToElement(messageMenuPopup, "miDelete", x => x.DeleteMessage);
             // Bind popup menu showing/hiding
             messagesItemsView.ElementMouseClick += OnMessagesViewElementMouseClick;
-            messageMenuPopup.ElementMouseClick += OnMessageMenuElementMouseClick;
         }
         void OnMessagesViewElementMouseClick(object sender, DevExpress.XtraGrid.Views.Items.ItemsViewHtmlElementMouseEventArgs e) {
-            if(e.ElementId == "btnAction") {
-                var size = ScaleDPI.ScaleSize(new Size(144, 180));
-                var menuBounds = new Rectangle(new Point(e.Bounds.X - (size.Width - e.Bounds.Width) / 2, e.Bounds.Y - size.Height), size);
-                messageMenuPopup.Show(gridControl, gridControl.RectangleToScreen(menuBounds));
+            if(e.ElementId == "btnMore") {
+                var size = ScaleDPI.ScaleSize(new Size(192, 180));
+                var location = new Point(
+                    e.Bounds.X - (size.Width - e.Bounds.Width) / 2,
+                    e.Bounds.Y - size.Height + ScaleDPI.ScaleVertical(8));
+                var menuScreenBounds = gridControl.RectangleToScreen(new Rectangle(location, size));
+                messageMenuPopup.Show(gridControl, menuScreenBounds);
             }
-        }
-        void OnMessageMenuElementMouseClick(object sender, HtmlElementMouseEventArgs e) {
-            if(IsHandleCreated) BeginInvoke(new Action(messageMenuPopup.Hide));
         }
         void InitializeMessageEdit() {
             var autoHeightEdit = messageEdit as IAutoHeightControlEx;
@@ -72,8 +73,8 @@
             var contentSize = typingBox.GetContentSize();
             typingBox.Height = contentSize.Height;
         }
-        void OnQueryItemTemplate(object sender, DevExpress.XtraGrid.Views.Items.QueryItemTemplateArgs e) {
-            var message = e.Row as Message;
+        void OnQueryItemTemplate(object sender, DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs e) {
+            var message = e.Row as DevExpress.DevAV.Chat.Model.Message;
             if(message == null)
                 return;
             if(message.IsOwnMessage)
@@ -84,7 +85,7 @@
             fluent.ViewModel.OnMessageRead(message);
         }
         void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeItemArgs e) {
-            var message = e.Row as Message;
+            var message = e.Row as DevExpress.DevAV.Chat.Model.Message;
             if(message == null || message.IsFirstMessageOfBlock)
                 return;
             if(!message.IsOwnMessage) {
@@ -105,6 +106,7 @@
             public static Style Toolbar = new ToolbarStyle();
             public static Style Message = new MessageStyle();
             public static Style MyMessage = new MyMessageStyle();
+            public static Style NoMessages = new NoMessagesStyle();
             public static Style Menu = new MenuStyle();
             public static Style TypingBox = new TypingBoxStyle();
             //
@@ -113,6 +115,7 @@
             sealed class MyMessageStyle : Style { }
             sealed class MenuStyle : Style { }
             sealed class TypingBoxStyle : Style { }
+            sealed class NoMessagesStyle : Style { }
         }
     }
 }

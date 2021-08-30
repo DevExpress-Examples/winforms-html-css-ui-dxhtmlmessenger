@@ -23,6 +23,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.DevAV.v21.2.Data" />
@@ -45,7 +47,10 @@
     <Reference Include="DevExpress.XtraBars.v21.2" />
     <Reference Include="DevExpress.XtraLayout.v21.2" />
     <Reference Include="DevExpress.XtraGrid.v21.2" />
-    <Reference Include="EntityFramework" />
+    <Reference Include="EntityFramework">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -130,10 +135,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\AppIcon.svg" />
+    <EmbeddedResource Include="Resources\DarkTheme.svg" />
     <EmbeddedResource Include="Resources\Close.svg" />
     <EmbeddedResource Include="Resources\Contact.svg" />
     <EmbeddedResource Include="Resources\PhoneCall.svg" />
@@ -145,7 +148,8 @@
     <EmbeddedResource Include="Resources\Facebook.svg" />
     <EmbeddedResource Include="Resources\Google.svg" />
     <EmbeddedResource Include="Resources\LinkedIn.svg" />
-    <EmbeddedResource Include="Resources\Action.svg" />
+    <EmbeddedResource Include="Resources\Menu.svg" />
+    <EmbeddedResource Include="Resources\Like.svg" />
     <EmbeddedResource Include="Resources\Beak.Left.svg" />
     <EmbeddedResource Include="Resources\Beak.Bottom.svg" />
   </ItemGroup>

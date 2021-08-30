@@ -1,20 +1,17 @@
-﻿Imports DevExpress.Mvvm.POCO
-Imports DevExpress.Mvvm
+﻿Imports System.ComponentModel
 Imports DevExpress.DevAV.Chat.Model
-Imports System.Drawing
-Imports System.ComponentModel
+Imports DevExpress.Mvvm
+Imports DevExpress.Mvvm.POCO
 
 Namespace DXHtmlMessengerSample.ViewModels
-
     <EditorBrowsable(EditorBrowsableState.Never)>
     Public MustInherit Class UserInfoViewModel
         Implements IDocumentContent, ISupportParameter
-
         Private userInfo As UserInfo
         Protected Sub New(ByVal userInfo As UserInfo)
             Me.userInfo = userInfo
         End Sub
-        Private Property ISupportParameter_Parameter() As Object Implements ISupportParameter.Parameter
+        Property ISupportParameter_Parameter() As Object Implements ISupportParameter.Parameter
             Get
                 Return userInfo
             End Get
@@ -52,24 +49,24 @@ Namespace DXHtmlMessengerSample.ViewModels
                 Return userInfo.Email
             End Get
         End Property
-        #Region "IDocumentContent"
+#Region "IDocumentContent"
         Protected Sub CloseDocument()
             Dim owner = DirectCast(Me, IDocumentContent).DocumentOwner
             If owner IsNot Nothing Then
                 owner.Close(Me)
             End If
         End Sub
-        Private ReadOnly Property IDocumentContent_Title() As Object Implements IDocumentContent.Title
+        ReadOnly Property IDocumentContent_Title() As Object Implements IDocumentContent.Title
             Get
                 Return String.Empty
             End Get
         End Property
-        Private Property IDocumentContent_DocumentOwner() As IDocumentOwner Implements IDocumentContent.DocumentOwner
+        Property IDocumentContent_DocumentOwner() As IDocumentOwner Implements IDocumentContent.DocumentOwner
         Sub IDocumentContent_OnClose(ByVal e As CancelEventArgs) Implements IDocumentContent.OnClose
         End Sub
         Sub IDocumentContent_OnDestroy() Implements IDocumentContent.OnDestroy
         End Sub
-        #End Region ' IDocumentContent
+#End Region ' IDocumentContent
         Protected Friend MustOverride ReadOnly Property ServiceKey() As String
     End Class
 End Namespace

@@ -14,9 +14,9 @@
             : base(user) {
         }
         public void LogOff() {
+            CloseDocument();
             var messenger = this.GetParentViewModel<MessengerViewModel>();
-            if(messenger != null)
-                messenger.LogOff();
+            if(messenger != null) messenger.LogOff();
         }
         public void Close() {
             CloseDocument();

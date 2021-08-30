@@ -1,7 +1,8 @@
-﻿namespace DevExpress.DevAV.Chat.Events {
-    using System;
-    using System.ComponentModel;
-    using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+
+namespace DevExpress.DevAV.Chat.Events {
 
     public abstract class ChannelEvent {
         protected ChannelEvent(IChannel channel) {

@@ -3,14 +3,17 @@
         <img src="${Avatar}" class="avatar" />
         <div id="statusBadge" class="status" />
     </div>
-    <div class="container">
-        <div class="contact-info">
-            <div class="nameAndInfo">
-                <div class="name">${UserName}</div>
-                <img src='Contact' class='info' />
+    <div>
+        <div class="container">
+            <div class="contact-info">
+                <div class="nameAndInfo">
+                    <div class="name">${UserName}</div>
+                    <img src='Contact' class='info' id="info" />
+                </div>
+                <div class="time">${LastOnlineText}</div>
             </div>
-            <div class="time">${LastOnlineText}</div>
+            <div id="unreadBadge" class="badge">${UnreadCount}</div>
         </div>
-        <div id="unreadBadge" class="badge">${UnreadCount}</div>
+        <div class='border'></div>
     </div>
 </div>

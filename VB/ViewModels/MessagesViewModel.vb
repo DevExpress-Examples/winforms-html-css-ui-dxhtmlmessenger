@@ -39,6 +39,9 @@ Namespace DXHtmlMessengerSample.ViewModels
                 If events.Count > 0 Then
                     Await DispatcherService?.BeginInvoke(AddressOf RaiseMessagesChanged)
                 End If
+                If TypeOf [event] Is NewMessages Then
+                    Await DispatcherService?.BeginInvoke(AddressOf RaiseContactChanged)
+                End If
             End If
         End Sub
         Async Sub OnMessageEvents(ByVal events As Dictionary(Of Long, MessageEvent))
@@ -60,8 +63,8 @@ Namespace DXHtmlMessengerSample.ViewModels
             Me.RaisePropertyChanged(Function(x) x.Messages)
         End Sub
         Async Sub OnContact(ByVal contact As Contact)
+            Await LoadMessages(Channel, contact)
             Await DispatcherService?.BeginInvoke(Sub() Me.Contact = contact)
-            Await LoadMessages(Channel, Me.Contact)
         End Sub
         Async Function LoadMessages(ByVal channel As IChannel, ByVal contact As Contact) As Task
             If channel IsNot Nothing AndAlso contact IsNot Nothing Then
@@ -70,6 +73,9 @@ Namespace DXHtmlMessengerSample.ViewModels
             End If
         End Function
         Public Overridable Property Contact() As Contact
+        Sub RaiseContactChanged()
+            Me.RaisePropertyChanged(Function(x) x.Contact)
+        End Sub
         Protected Sub OnContactChanged()
             UpdateActions()
         End Sub

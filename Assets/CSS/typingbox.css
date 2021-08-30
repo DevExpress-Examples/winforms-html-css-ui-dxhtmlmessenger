@@ -1,9 +1,9 @@
 .typingBox {
 	padding: 0px 10px 10px 10px;
+	background-color: @Control;
 }
 
 .container {
-	font-family: Segoe UI;
 	background-color: @Window;
 	color: @WindowText;
 	display: flex;
@@ -13,7 +13,7 @@
 	align-self: center;
 	padding: 5px 10px 5px 10px;
 	border-style: solid;
-	border-color: rgba(60, 60, 60, 0.2);
+	border-color: @WindowText/0.2;
 	border-width: 1px;
 	border-radius: 8px 8px 0px 8px;
 }
@@ -21,13 +21,12 @@
 .message {
 	max-height: 60px;
 	flex-grow: 1;
-	background-color: yellow;
 }
 
 .separator-Container {
 	width: 1px;
 	min-height: 36px;
-	background-color: rgba(60, 60, 60, 0.1);
+	background-color: @WindowText/0.1;
 	margin: 4px 8px 4px 8px;
 }
 
@@ -37,14 +36,15 @@
 	min-width: 20px;
 	padding: 8px;
 	margin-left: 2px;
+	opacity:0.5;
 }
 
 	.button:hover {
 		border-radius: 4px;
-		background-color: #F2F2F2;
+		background-color: @Control;
 	}
 
 	.button:disabled {
-		opacity: 0.35;
+		opacity: 0.25;
 		background-color: #00000000;
 	}

@@ -35,13 +35,13 @@
         #region Apply
         public void Apply(HtmlContentControl control) {
             control.HtmlImages = DXHtmlMessenger.SvgImages;
-            control.Template = Html;
-            control.Styles = Css;
+            control.HtmlTemplate.Template = Html;
+            control.HtmlTemplate.Styles = Css;
         }
         public void Apply(HtmlContentPopup popup) {
             popup.HtmlImages = DXHtmlMessenger.SvgImages;
-            popup.Template = Html;
-            popup.Styles = Css;
+            popup.HtmlTemplate.Template = Html;
+            popup.HtmlTemplate.Styles = Css;
         }
         public void Apply(DevExpress.Utils.Html.HtmlTemplate template) {
             template.Template = Html;

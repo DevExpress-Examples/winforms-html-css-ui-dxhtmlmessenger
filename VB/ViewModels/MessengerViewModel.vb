@@ -19,13 +19,13 @@ Namespace DXHtmlMessengerSample.ViewModels
             Dim settingsService = Me.GetRequiredService(Of ISettingsService)()
             Dim theme = If(settingsService.Theme, "Light")
             Dim currentUser = If(settingsService.CurrentUser, "John Heart")
-            Title = $"DX HTML MESSENGER (VB) - [{currentUser.ToUpper()}]"
             ' Open messenger channel
             Dim messageServer = Me.GetRequiredService(Of IMessageServer)()
-            channel = Await messageServer.Connect(currentUser)
+            channel = Await messageServer.Create(currentUser)
             channel.Subscribe(AddressOf OnChannelEvent)
             ' Pass the channel into dependent ViewModels
             Messenger.Default.Send(channel)
+            Await dispatcher.BeginInvoke(Sub() Title = $"DX HTML MESSENGER (VB) - [{currentUser.ToUpper()}]")
         End Function
         Private AuthCounter As Integer = 0
         Sub OnChannelEvent(ByVal [event] As ChannelEvent)

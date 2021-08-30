@@ -38,6 +38,8 @@
                 }
                 if(events.Count > 0)
                     await DispatcherService?.BeginInvoke(RaiseMessagesChanged);
+                if(@event is NewMessages)
+                    await DispatcherService?.BeginInvoke(RaiseContactChanged);
             }
         }
         async void OnMessageEvents(Dictionary<long, MessageEvent> events) {
@@ -57,8 +59,8 @@
             this.RaisePropertyChanged(x => x.Messages);
         }
         async void OnContact(Contact contact) {
+            await LoadMessages(Channel, contact);
             await DispatcherService?.BeginInvoke(() => this.Contact = contact);
-            await LoadMessages(Channel, Contact);
         }
         async Task LoadMessages(IChannel channel, Contact contact) {
             if(channel != null && contact != null) {
@@ -69,6 +71,9 @@
         public virtual Contact Contact {
             get;
             protected set;
+        }
+        void RaiseContactChanged() {
+            this.RaisePropertyChanged(x => x.Contact);
         }
         protected void OnContactChanged() {
             UpdateActions();
@@ -111,13 +116,13 @@
         }
         [Command(CanExecuteMethodName = nameof(CanExecuteActions))]
         public async void PhoneCall() {
-            var contact = await Channel.GetUserInfo(Contact.ID);
-            DoCall("Phone Call: " + contact.MobilePhone);
+            var contactInfo = await Channel.GetUserInfo(Contact.ID);
+            DoCall("Phone Call: " + contactInfo.MobilePhone);
         }
         [Command(CanExecuteMethodName = nameof(CanExecuteActions))]
         public async void VideoCall() {
-            var contact = await Channel.GetUserInfo(Contact.ID);
-            DoCall("Video Call: " + contact.MobilePhone);
+            var contactInfo = await Channel.GetUserInfo(Contact.ID);
+            DoCall("Video Call: " + contactInfo.MobilePhone);
         }
         void DoCall(string call) {
             var msgService = this.GetRequiredService<IMessageBoxService>();

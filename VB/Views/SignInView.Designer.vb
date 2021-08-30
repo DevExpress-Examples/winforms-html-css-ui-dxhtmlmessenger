@@ -16,7 +16,7 @@
             MyBase.Dispose(disposing)
         End Sub
 
-        #Region "Component Designer generated code"
+#Region "Component Designer generated code"
 
         ''' <summary> 
         ''' Required method for Designer support - do not modify 
@@ -67,7 +67,7 @@
             ' 
             ' LoginView
             ' 
-            Me.AutoScaleDimensions = New System.Drawing.SizeF(96F, 96F)
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0F, 96.0F)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
             Me.Controls.Add(Me.signInView)
             Me.Name = "LoginView"
@@ -80,7 +80,7 @@
 
         End Sub
 
-        #End Region
+#End Region
 
         Private mvvmContext As DevExpress.Utils.MVVM.MVVMContext
         Private signInView As DevExpress.XtraEditors.HtmlContentControl

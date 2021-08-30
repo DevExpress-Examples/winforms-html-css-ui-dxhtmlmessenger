@@ -89,6 +89,7 @@ namespace DXHtmlMessengerSample.Views {
             // messageMenuPopup
             // 
             this.messageMenuPopup.ContainerControl = this;
+            this.messageMenuPopup.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True;
             this.messageMenuPopup.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             // 
             // toolbarPanel
@@ -125,10 +126,7 @@ namespace DXHtmlMessengerSample.Views {
             this.colText,
             this.colStatusText});
             this.messagesItemsView.GridControl = this.gridControl;
-            this.messagesItemsView.LayoutOptions.Stack.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.messagesItemsView.Name = "messagesItemsView";
-            this.messagesItemsView.Styles = null;
-            this.messagesItemsView.Template = null;
             this.messagesItemsView.QueryItemTemplate += new DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventHandler(this.OnQueryItemTemplate);
             this.messagesItemsView.CustomizeItem += new DevExpress.XtraGrid.Views.Items.CustomizeItemEventHandler(this.OnCustomizeItem);
             // 
