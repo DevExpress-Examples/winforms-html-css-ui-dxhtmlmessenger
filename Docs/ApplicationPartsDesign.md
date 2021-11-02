@@ -4,7 +4,7 @@
 
 ![search panel](./Images/dxhtmlmessenger-searchbox.png)
 
-The Search Panel is implemented by the **HtmlContentControl**. It uses HTML markup and CSS from the following files to render an icon and input box (**SearchControl**). 
+The Search Panel is implemented by the [HtmlContentControl](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentControl). It uses HTML markup and CSS from the following files to render an icon and input box ([SearchControl](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.SearchControl)). 
 
 - [Assets/Html/searchPanel.html](../Assets/Html/searchPanel.html)
 - [Assets/CSS/searchPanel.css](../Assets/CSS/searchPanel.css)
@@ -32,7 +32,7 @@ The **SearchControl** automatically filters its client control (**SeachControl.C
 
 ![typing box](./Images/dxhtmlmessenger-typingbox.png)
 
-The Typing Box is implemented by the **HtmlContentControl**. It uses HTML markup and CSS from the following files to display an input box (**MemoEdit**) and a _Send_ button. 
+The Typing Box is implemented by the **HtmlContentControl**. It uses HTML markup and CSS from the following files to display an input box ([MemoEdit](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.MemoEdit)) and a _Send_ button. 
 
 - [Assets/Html/typingbox.html](../Assets/Html/typingbox.html)
 - [Assets/CSS/typingbox.css](../Assets/CSS/typingbox.css)
@@ -75,7 +75,7 @@ The following snippet from the [typingbox.css](../Assets/CSS/typingbox.css) file
 	}
 ```
 
-You can handle the **HtmlContentControl.ElementMouseClick** event to perform actions when an element (button) is clicked. The current application uses Fluent API to define the button's action on a click.
+You can handle the [HtmlContentControl.ElementMouseClick](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentControl.ElementMouseClick) event to perform actions when an element (button) is clicked. The current application uses Fluent API to define the button's action on a click.
 
 ```cs
 fluent.BindCommandToElement(typingBox, "btnSend", x => x.SendMessage);
@@ -86,7 +86,16 @@ public void SendMessage() {
     MessageText = null;
 }
 ```
-
+```vb
+fluent.BindCommandToElement(typingBox, "btnSend", Sub(x) x.SendMessage())
+'...
+Public Sub SendMessage()
+    If Channel IsNot Nothing Then
+        Channel.Send(New AddMessage(Contact, MessageText))
+    End If
+    MessageText = Nothing
+End Sub
+```
 ### Toolbar
 
 ![typing box](./Images/dxhtmlmessenger-toolbar.png)
@@ -115,7 +124,7 @@ The HTML code from the [toolbar.html](../Assets/Html/toolbar.html) file is shown
 
 #### Data Binding - Display Field Values
 
-The example uses the **HtmlContentControl.DataContext** property to bind the **HtmlContentControl** to the _MessagesViewModel.Contact_ business object—this data context supplies data to the control. 
+The example uses the [HtmlContentControl.DataContext](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentControl.DataContext) property to bind the **HtmlContentControl** to the _MessagesViewModel.Contact_ business object—this data context supplies data to the control. 
 
 In the HTML code above, the '$' character at the beginning of the "${UserName}" string specifies that the string that follows is an [interpolated string](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated)—an expression that the control needs to evaluate. The "{_FieldName_}" form is the syntax for data binding and is used to insert a value of the specified field in the output. The "${UserName}" text inserts a value of the _UserName_ field from the data context.
 
@@ -133,7 +142,7 @@ Buttons are added to the **HtmlContentControl** in the same way as described in 
 
 ![contact list](./Images/dxhtmlmessenger-contactlist.png)
 
-The contact list is implemented by the GridControl's **TileView**. Each record (contact) in a **TileView** is a tile—a non-editable box that arranges fields based on a specific template. The **TileView** allows you to set the tile template in two ways:
+The contact list is implemented by the GridControl's [TileView](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#html-and-css-based-tile-template). Each record (contact) in a **TileView** is a tile—a non-editable box that arranges fields based on a specific template. The **TileView** allows you to set the tile template in two ways:
 - In HTML format (as demonstrated in the current application).
 - Using the common Table Layout concept (see [Tile View Template](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#create-tile-template)).
 
@@ -172,7 +181,7 @@ The "$FieldName" syntax is used to display values of corresponding fields from a
 
 #### Customize Individual Elements 
 
-The application handles the **TileView.ItemCustomize** event to dynamically control the visibility of tile elements.
+The application handles the [TileView.ItemCustomize](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Tile.TileView.ItemCustomize) event to dynamically control the visibility of tile elements.
 
 ```cs
 void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArgs e) {
@@ -189,14 +198,30 @@ void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArg
     }
 }                                                                                    
 ```
-
+```vb
+Sub OnContactItemTemplateCustomize(ByVal sender As Object, ByVal e As TileViewItemCustomizeEventArgs) Handles contactsTileView.ItemCustomize
+    Dim contact = TryCast(contactsTileView.GetRow(e.RowHandle), Contact)
+    If contact IsNot Nothing Then
+        Dim statusBadge = e.HtmlElementInfo.FindElementById("statusBadge")
+        If statusBadge IsNot Nothing AndAlso (Not contact.IsInactive) Then
+            statusBadge.Style.SetBackgroundColor("@Green")
+        End If
+        If Not contact.HasUnreadMessages Then
+            Dim unreadBadge = e.HtmlElementInfo.FindElementById("unreadBadge")
+            If unreadBadge IsNot Nothing Then
+                unreadBadge.Hidden = True
+            End If
+        End If
+    End If
+End Sub
+```
 
 
 ### Messages
 
 ![message list](./Images/dxhtmlmessenger-messagelist.png)
 
-The message list is implemented by the GridControl's **ItemsView**—a View that renders each item (message) based on a specific HTML template. 
+The message list is implemented by the GridControl's [ItemsView](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView) — a View that renders each item (message) based on a specific HTML template. 
 Items are arranged vertically in the current application.
 
 You can find the HTML templates and CSS styles applied to items in the following files: 
@@ -229,7 +254,7 @@ An element's "${Owner.Avatar}" syntax in HTML markup is used to bind this elemen
 
 #### Use Different Tempates for Different Items
 
-The **ItemsView.QueryItemTemplate** event is handled to assign different templates to messages of the current user and messages of other users.
+The [ItemsView.QueryItemTemplate](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView.QueryItemTemplate) event is handled to assign different templates to messages of the current user and messages of other users.
 
 ```cs
 void OnQueryItemTemplate(object sender, DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs e) {
@@ -244,10 +269,25 @@ void OnQueryItemTemplate(object sender, DevExpress.XtraGrid.Views.Items.QueryIte
     fluent.ViewModel.OnMessageRead(message);
 }    
 ```
+```vb
+Sub OnQueryItemTemplate(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs) Handles messagesItemsView.QueryItemTemplate
+    Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
+    If message Is Nothing Then
+        Return
+    End If
+    If message.IsOwnMessage Then
+        Styles.MyMessage.Apply(e.Template)
+    Else
+        Styles.Message.Apply(e.Template)
+    End If
+    Dim fluent = mvvmContext.OfType(Of MessagesViewModel)()
+    fluent.ViewModel.OnMessageRead(message)
+End Sub   
+```
 
 #### Customize Individual Elements 
 
-The application handles the **ItemsView.CustomizeItem** event to dynamically customize individual elements of items.
+The application handles the [ItemsView.CustomizeItem](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView.CustomizeItem) event to dynamically customize individual elements of items.
 
 ```cs
 void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeItemArgs e) {
@@ -269,11 +309,34 @@ void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeIte
     }
 }
 ```
-
+```vb
+Sub OnCustomizeItem(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
+    Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
+    If message Is Nothing OrElse message.IsFirstMessageOfBlock Then
+        Return
+    End If
+    If Not message.IsOwnMessage Then
+        Dim avatar = e.ElementInfo.FindElementById("avatar")
+        If avatar IsNot Nothing Then
+            avatar.Hidden = True
+        End If
+    End If
+    Dim name = e.ElementInfo.FindElementById("name")
+    If name IsNot Nothing Then
+        name.Hidden = True
+    End If
+    If Not message.IsFirstMessageOfReply Then
+        Dim sent = e.ElementInfo.FindElementById("sent")
+        If sent IsNot Nothing Then
+            sent.Hidden = True
+        End If
+    End If
+End Sub
+```
 
 ### Popup Window
 
-The **HtmlContentPopup** control is a pop-up control that renders its contents from HTML markup and CSS styles. The application uses **HtmlContentPopup** controls to create the following pop-up windows:
+The [HtmlContentPopup](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup) control is a pop-up control that renders its contents from HTML markup and CSS styles. The application uses **HtmlContentPopup** controls to create the following pop-up windows:
 - Pop-up windows that show information about the current user and the contact that the user chats with.
 - A log off window.
 - A pop-up menu that is displayed when you click the 'Thumb Up' icon for a message.
@@ -304,21 +367,27 @@ The HTML code from the [menu.html](../Assets/Html/menu.html) file is shown below
 </div>
 ```
 
-The **HtmlContentPopup.Show** method is used to display the pop-up window:
+The [HtmlContentPopup.Show](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup.Show(System.Windows.Forms.IWin32Window-System.Drawing.Rectangle)) method is used to display the pop-up window:
 
 ```cs
 messageMenuPopup.Show(gridControl, menuScreenBounds);
 ```
 
-The **HtmlContentPopup.Hide** method allows you to close the pop-up window.
+The [HtmlContentPopup.Hide](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup.Hide) method allows you to close the pop-up window.
 
-You can handle the **HtmlContentPopup.ElementMouseClick** event to perform actions when a user clicks on an element within the **HtmlContentPopup** control. The current application uses Fluent API to bind actions to the pop-up control's elements:
+You can handle the [HtmlContentPopup.ElementMouseClick](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup.ElementMouseClick) event to perform actions when a user clicks on an element within the **HtmlContentPopup** control. The current application uses Fluent API to bind actions to the pop-up control's elements:
 
 ```cs
 fluent.BindCommandToElement(messageMenuPopup, "miLike", x => x.LikeMessage);
 fluent.BindCommandToElement(messageMenuPopup, "miCopy", x => x.CopyMessage);
 fluent.BindCommandToElement(messageMenuPopup, "miCopyText", x => x.CopyMessageText);
 fluent.BindCommandToElement(messageMenuPopup, "miDelete", x => x.DeleteMessage);
+```
+```vb
+fluent.BindCommandToElement(messageMenuPopup, "miLike", Sub(x) x.LikeMessage())
+fluent.BindCommandToElement(messageMenuPopup, "miCopy", Sub(x) x.CopyMessage())
+fluent.BindCommandToElement(messageMenuPopup, "miCopyText", Sub(x) x.CopyMessageText())
+fluent.BindCommandToElement(messageMenuPopup, "miDelete", Sub(x) x.DeleteMessage())
 ```
 
 ## See Also
