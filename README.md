@@ -43,11 +43,11 @@ DXHtmlMessenger is built based on the DevExpress controls that render a UI from 
 
 The form's GUI is set up using the following DevExpress controls:
 
-- **HtmlContentControl** — Renders a UI from an HTML-CSS template. Can show data from a bound data context (a business object or data source item). The HTML code can contain the `input` tag, which defines a placeholder for any external control (for instance, a text box). 
-- Data Grid's **TileView** — Allows you to render its tiles from a specific template in HTML format, and apply CSS styles to tile elements.
-- Data Grid's **ItemsView** — Presents records from a data source as an item list. Each list item is rendered using an HTML-CSS template.
+- [HtmlContentControl](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentControl) — Renders a UI from an HTML-CSS template. Can show data from a bound data context (a business object or data source item). The HTML code can contain the `input` tag, which defines a placeholder for any external control (for instance, a text box). 
+- Data Grid's [TileView](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view) — Allows you to render its tiles from a specific template in HTML format, and apply CSS styles to tile elements.
+- Data Grid's [ItemsView](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView) — Presents records from a data source as an item list. Each list item is rendered using an HTML-CSS template.
 
-The app demonstrates the **HtmlContentPopup** component used to show specific information in popup windows (information about users, and popup menus). This component also renders a UI from an HTML-CSS template. It can also show data from a bound data context (a business object or data source item).
+The app demonstrates the [HtmlContentPopup](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup) component used to show specific information in popup windows (information about users, and popup menus). This component also renders a UI from an HTML-CSS template. It can also show data from a bound data context (a business object or data source item).
 
 ![popup-window](./Docs/Images/dxhtmlmessenger-popup-s.png)
 
@@ -68,5 +68,6 @@ See the following page for more information: [Work with data](./Docs/HowItWorksW
 
 ## Documentation
 
+- [HTML and CSS-based Desktop UI](https://docs.devexpress.com/WindowsForms/403397/common-features/html-css-based-desktop-ui)
 - [HTML Tags](https://docs.devexpress.com/WindowsForms/403398/common-features/html-css-based-desktop-ui/html-tags?v=21.2)
 - [CSS Styles](https://docs.devexpress.com/WindowsForms/403399/common-features/html-css-based-desktop-ui/css-styles?v=21.2)
