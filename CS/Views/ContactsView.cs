@@ -1,8 +1,10 @@
 ﻿namespace DXHtmlMessengerSample.Views {
+    using System;
     using System.Drawing;
     using System.Windows.Forms;
     using DevExpress.Data;
     using DevExpress.DevAV.Chat.Model;
+    using DevExpress.Utils.Html;
     using DevExpress.XtraEditors;
     using DevExpress.XtraGrid.Views.Base;
     using DevExpress.XtraGrid.Views.Tile;
@@ -53,19 +55,40 @@
         void InitializeBehavior() {
             // Setup default sorting for contacts
             var colLastActivity = contactsTileView.Columns["LastActivity"];
-            if(colLastActivity != null) contactsTileView.SortInfo.Add(colLastActivity, ColumnSortOrder.Descending);
+            if(colLastActivity != null)
+                contactsTileView.SortInfo.Add(colLastActivity, ColumnSortOrder.Descending);
+            // Setup search by user name only
+            searchControl.QueryIsSearchColumn += OnQueryIsSearchColumn;
+        }
+        void OnQueryIsSearchColumn(object sender, QueryIsSearchColumnEventArgs e) {
+            e.IsSearchColumn = (e.FieldName == "UserName");
         }
         void InitializeMenusAndTooltips() {
             // Bind popup menu showing/hiding
             contactsTileView.MouseUp += OnContactsMouseUp;
-            // Bind tooltip showing
+            contactsTileView.MouseDown += OnContactsMouseDown;
+            // Bind tooltip showing/hiding
             contactsTileView.HtmlElementMouseOver += OnContactsHtmlElementMouseOver;
+            contactsTileView.PositionChanged += OnContactsPositionChanged;
+            contactTooltip.Hidden += ContactTooltip_Hidden;
         }
+        int? activeInfoRowHandle;
+        void ContactTooltip_Hidden(object sender, EventArgs e) {
+            activeInfoStyle = null;
+            if(activeInfoRowHandle.HasValue)
+                contactsTileView.RefreshRow(activeInfoRowHandle.Value);
+            activeInfoRowHandle = null;
+        }
+        CssStyle activeInfoStyle;
         async void OnContactsHtmlElementMouseOver(object sender, TileViewHtmlElementMouseEventArgs e) {
             if(e.ElementId == "info") {
+                activeInfoStyle = e.Element.Style;
+                activeInfoRowHandle = e.RowHandle;
                 await System.Threading.Tasks.Task.Delay(500);
                 if(!e.Bounds.Contains(gridControl.PointToClient(MousePosition)))
                     return;
+                if(activeInfoStyle != null)
+                    activeInfoStyle.SetProperty("opacity", "0.5");
                 var fluent = mvvmContext.OfType<ContactsViewModel>();
                 var tooltipViewModel = await fluent.ViewModel.EnsureTooltipViewModel(e.Row as Contact);
                 if(!contactTooltip.IsViewModelCreated)
@@ -78,12 +101,23 @@
                 contactTooltip.Show(gridControl, tooltipScreenBounds);
             }
         }
+        void OnContactsPositionChanged(object sender, EventArgs e) {
+            contactTooltip.Hide();
+        }
+        void OnContactsMouseDown(object sender, MouseEventArgs e) {
+            var args = DevExpress.Utils.DXMouseEventArgs.GetMouseArgs(e);
+            if(e.Button == MouseButtons.Right) {
+                var hitInfo = contactsTileView.CalcHitInfo(e.Location);
+                if(hitInfo.HitTest == TileControlHitTest.Item)
+                    args.Handled = true;
+            }
+        }
         void OnContactsMouseUp(object sender, MouseEventArgs e) {
             var args = DevExpress.Utils.DXMouseEventArgs.GetMouseArgs(e);
             if(e.Button == MouseButtons.Right) {
                 var hitInfo = contactsTileView.CalcHitInfo(e.Location);
                 if(hitInfo.HitTest == TileControlHitTest.Item) {
-                    var size = ScaleDPI.ScaleSize(new Size(192, 130));
+                    var size = ScaleDPI.ScaleSize(new Size(212, 130));
                     var location = new Point(e.X - size.Width / 2,
                         e.Y - size.Height + ScaleDPI.ScaleVertical(8));
                     var menuScreenBounds = gridControl.RectangleToScreen(new Rectangle(location, size));
@@ -98,11 +132,11 @@
         void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArgs e) {
             var contact = contactsTileView.GetRow(e.RowHandle) as Contact;
             if(contact != null) {
-                var statusBadge = e.HtmlElementInfo.FindElementById("statusBadge");
+                var statusBadge = e.HtmlElement.FindElementById("statusBadge");
                 if(statusBadge != null && !contact.IsInactive)
                     statusBadge.Style.SetBackgroundColor("@Green");
                 if(!contact.HasUnreadMessages) {
-                    var unreadBadge = e.HtmlElementInfo.FindElementById("unreadBadge");
+                    var unreadBadge = e.HtmlElement.FindElementById("unreadBadge");
                     if(unreadBadge != null)
                         unreadBadge.Hidden = true;
                 }

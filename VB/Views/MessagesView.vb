@@ -1,5 +1,8 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports DevExpress.Utils.Html
+Imports DevExpress.Utils.Html.Internal
+Imports DevExpress.XtraEditors
 Imports DevExpress.XtraEditors.Controls
+Imports DevExpress.XtraGrid.Views.Items
 Imports DXHtmlMessengerSample.ViewModels
 
 Namespace DXHtmlMessengerSample.Views
@@ -28,7 +31,7 @@ Namespace DXHtmlMessengerSample.Views
             fluent.SetBinding(toolbarPanel, Function(tp) tp.DataContext, Function(x) x.Contact)
             ' We need update chat when the ViewModel detect changes
             fluent.SetTrigger(Function(x) x.Messages, Sub(contacts) messagesItemsView.RefreshData())
-            fluent.SetTrigger(Function(x) x.Contact, Sub(contact) messagesItemsView.ScrollToEnd())
+            fluent.SetTrigger(Function(x) x.Contact, Sub(contact) messagesItemsView.MoveLast())
             ' Bind life-cycle events
             fluent.WithEvent(Me, NameOf(HandleCreated)).EventToCommand(Sub(x) x.OnCreate())
             fluent.WithEvent(Me, NameOf(HandleDestroyed)).EventToCommand(Sub(x) x.OnDestroy())
@@ -49,25 +52,47 @@ Namespace DXHtmlMessengerSample.Views
             fluent.BindCommandToElement(messageMenuPopup, "miDelete", Sub(x) x.DeleteMessage())
             ' Bind popup menu showing/hiding
             AddHandler messagesItemsView.ElementMouseClick, AddressOf OnMessagesViewElementMouseClick
+            AddHandler messagesItemsView.TopRowPixelChanged, AddressOf OnMessagesTopRowPixelChanged
+            AddHandler messageMenuPopup.Hidden, AddressOf OnMessageMenuPopupHidden
         End Sub
-        Sub OnMessagesViewElementMouseClick(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.ItemsViewHtmlElementMouseEventArgs)
+        Dim activeMoreStyle As CssStyle
+        Sub OnMessagesViewElementMouseClick(ByVal sender As Object, ByVal e As ItemsViewHtmlElementMouseEventArgs)
             If e.ElementId = "btnMore" Then
-                Dim size = ScaleDPI.ScaleSize(New Size(192, 180))
-                Dim location = New Point(e.Bounds.X - (size.Width - e.Bounds.Width) \ 2, e.Bounds.Y - size.Height + ScaleDPI.ScaleVertical(8))
-                Dim menuScreenBounds = gridControl.RectangleToScreen(New Rectangle(location, size))
-                messageMenuPopup.Show(gridControl, menuScreenBounds)
+                activeMoreStyle = e.Element.Style
+                activeMoreRowHandle = e.RowHandle
+                activeMoreStyle.SetProperty("opacity", "1")
             End If
+            If e.ElementId = "btnMore" Or e.ElementId = "btnLike" Then
+                ShowMenu(e)
+            End If
+        End Sub
+        Sub ShowMenu(ByVal e As ItemsViewHtmlElementMouseEventArgs)
+            Dim size = ScaleDPI.ScaleSize(New Size(212, 180))
+            Dim location = New Point(e.Bounds.X - (size.Width - e.Bounds.Width) \ 2, e.Bounds.Y - size.Height + ScaleDPI.ScaleVertical(8))
+            Dim menuScreenBounds = gridControl.RectangleToScreen(New Rectangle(location, size))
+            messageMenuPopup.Show(gridControl, menuScreenBounds)
+        End Sub
+        Sub OnMessagesTopRowPixelChanged(ByVal sender As Object, ByVal e As EventArgs)
+            messageMenuPopup.Hide()
+        End Sub
+        Dim activeMoreRowHandle As Integer?
+        Sub OnMessageMenuPopupHidden(ByVal sender As Object, ByVal e As EventArgs)
+            activeMoreStyle = Nothing
+            If activeMoreRowHandle.HasValue Then
+                messagesItemsView.RefreshRow(activeMoreRowHandle.Value)
+            End If
+            activeMoreRowHandle = Nothing
         End Sub
         Sub InitializeMessageEdit()
             Dim autoHeightEdit = TryCast(messageEdit, IAutoHeightControlEx)
             autoHeightEdit.AutoHeightEnabled = True
             AddHandler autoHeightEdit.HeightChanged, AddressOf OnMessageHeightChanged
         End Sub
-        Sub OnMessageHeightChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+        Sub OnMessageHeightChanged(ByVal sender As Object, ByVal e As EventArgs)
             Dim contentSize = typingBox.GetContentSize()
             typingBox.Height = contentSize.Height
         End Sub
-        Sub OnQueryItemTemplate(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs) Handles messagesItemsView.QueryItemTemplate
+        Sub OnQueryItemTemplate(ByVal sender As Object, ByVal e As QueryItemTemplateEventArgs) Handles messagesItemsView.QueryItemTemplate
             Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
             If message Is Nothing Then
                 Return
@@ -80,23 +105,34 @@ Namespace DXHtmlMessengerSample.Views
             Dim fluent = mvvmContext.OfType(Of MessagesViewModel)()
             fluent.ViewModel.OnMessageRead(message)
         End Sub
-        Sub OnCustomizeItem(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
+        Sub OnCustomizeItem(ByVal sender As Object, ByVal e As CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
             Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
             If message Is Nothing OrElse message.IsFirstMessageOfBlock Then
                 Return
             End If
-            If Not message.IsOwnMessage Then
-                Dim avatar = e.ElementInfo.FindElementById("avatar")
-                If avatar IsNot Nothing Then
-                    avatar.Hidden = True
+            If message.IsLiked Then
+                Dim btnLike = e.Element.FindElementById("btnLike")
+                Dim btnMore = e.Element.FindElementById("btnMore")
+                If btnLike IsNot Nothing And btnMore IsNot Nothing Then
+                    btnLike.Hidden = False
+                    btnMore.Hidden = True
                 End If
             End If
-            Dim name = e.ElementInfo.FindElementById("name")
+            If message.IsFirstMessageOfBlock Then
+                Return
+            End If
+            If Not message.IsOwnMessage Then
+                Dim avatar = e.Element.FindElementById("avatar")
+                If avatar IsNot Nothing Then
+                    avatar.Style.SetVisibility(CssVisibility.Hidden)
+                End If
+            End If
+            Dim name = e.Element.FindElementById("name")
             If name IsNot Nothing Then
                 name.Hidden = True
             End If
             If Not message.IsFirstMessageOfReply Then
-                Dim sent = e.ElementInfo.FindElementById("sent")
+                Dim sent = e.Element.FindElementById("sent")
                 If sent IsNot Nothing Then
                     sent.Hidden = True
                 End If

@@ -80,8 +80,9 @@
             this.searchControl.Margin = new System.Windows.Forms.Padding(0);
             this.searchControl.Name = "searchControl";
             this.searchControl.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.searchControl.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Repository.ClearButton()});
             this.searchControl.Properties.Client = this.gridControl;
-            this.searchControl.Properties.ShowClearButton = false;
             this.searchControl.Properties.ShowSearchButton = false;
             this.searchControl.Size = new System.Drawing.Size(179, 18);
             this.searchControl.TabIndex = 0;
@@ -133,7 +134,7 @@
             // 
             // contactTooltip
             // 
-            this.contactTooltip.AutoHidingDelay = 2500;
+            this.contactTooltip.AutoHidingDelay = 1500;
             this.contactTooltip.ContainerControl = this;
             this.contactTooltip.HideAutomatically = DevExpress.Utils.DefaultBoolean.True;
             this.contactTooltip.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True;

@@ -1,4 +1,5 @@
 ﻿Imports DevExpress.DevAV.Chat.Model
+Imports DevExpress.Utils.Html
 Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid.Views.Base
 Imports DevExpress.XtraGrid.Views.Tile
@@ -14,13 +15,6 @@ Namespace DXHtmlMessengerSample.Views
                 InitializeBindings()
                 InitializeBehavior()
                 InitializeMenusAndTooltips()
-            End If
-        End Sub
-        Sub InitializeBehavior()
-            ' Setup default sorting for contacts
-            Dim colLastActivity = contactsTileView.Columns("LastActivity")
-            If colLastActivity IsNot Nothing Then
-                contactsTileView.SortInfo.Add(colLastActivity, DevExpress.Data.ColumnSortOrder.Descending)
             End If
         End Sub
         Sub InitializeStyles()
@@ -55,17 +49,46 @@ Namespace DXHtmlMessengerSample.Views
             fluent.BindCommand("btnVideoCall", Sub(x) x.VideoCall())
             fluent.BindCommand("btnMessage", Sub(x) x.TextMessage())
         End Sub
+        Sub InitializeBehavior()
+            ' Setup default sorting for contacts
+            Dim colLastActivity = contactsTileView.Columns("LastActivity")
+            If colLastActivity IsNot Nothing Then
+                contactsTileView.SortInfo.Add(colLastActivity, DevExpress.Data.ColumnSortOrder.Descending)
+            End If
+            ' Setup search by user name only
+            AddHandler searchControl.QueryIsSearchColumn, AddressOf OnQueryIsSearchColumn
+        End Sub
+        Sub OnQueryIsSearchColumn(ByVal sender As Object, ByVal e As QueryIsSearchColumnEventArgs)
+            e.IsSearchColumn = (e.FieldName = "UserName")
+        End Sub
         Sub InitializeMenusAndTooltips()
             ' Bind popup menu showing/hiding
             AddHandler contactsTileView.MouseUp, AddressOf OnContactsMouseUp
+            AddHandler contactsTileView.MouseDown, AddressOf OnContactsMouseDown
             ' Bind tooltip showing
             AddHandler contactsTileView.HtmlElementMouseOver, AddressOf OnContactsHtmlElementMouseOver
+            AddHandler contactsTileView.PositionChanged, AddressOf OnContactsPositionChanged
+            AddHandler contactTooltip.Hidden, AddressOf ContactTooltip_Hidden
         End Sub
+        Dim activeInfoRowHandle As Integer?
+        Sub ContactTooltip_Hidden(ByVal sender As Object, ByVal e As EventArgs)
+            activeInfoStyle = Nothing
+            If activeInfoRowHandle.HasValue Then
+                contactsTileView.RefreshRow(activeInfoRowHandle.Value)
+            End If
+            activeInfoRowHandle = Nothing
+        End Sub
+        Dim activeInfoStyle As CssStyle
         Async Sub OnContactsHtmlElementMouseOver(ByVal sender As Object, ByVal e As TileViewHtmlElementMouseEventArgs)
             If e.ElementId = "info" Then
+                activeInfoStyle = e.Element.Style
+                activeInfoRowHandle = e.RowHandle
                 Await System.Threading.Tasks.Task.Delay(500)
                 If Not e.Bounds.Contains(gridControl.PointToClient(MousePosition)) Then
                     Return
+                End If
+                If activeInfoStyle IsNot Nothing Then
+                    activeInfoStyle.SetProperty("opacity", "0.5")
                 End If
                 Dim fluent = mvvmContext.OfType(Of ContactsViewModel)()
                 Dim tooltipViewModel = Await fluent.ViewModel.EnsureTooltipViewModel(TryCast(e.Row, Contact))
@@ -78,12 +101,24 @@ Namespace DXHtmlMessengerSample.Views
                 contactTooltip.Show(gridControl, tooltipScreenBounds)
             End If
         End Sub
+        Sub OnContactsPositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+            contactTooltip.Hide()
+        End Sub
+        Sub OnContactsMouseDown(ByVal sender As Object, ByVal e As MouseEventArgs)
+            Dim args = DevExpress.Utils.DXMouseEventArgs.GetMouseArgs(e)
+            If e.Button = MouseButtons.Right Then
+                Dim hitInfo = contactsTileView.CalcHitInfo(e.Location)
+                If (hitInfo.HitTest = TileControlHitTest.Item) Then
+                    args.Handled = True
+                End If
+            End If
+        End Sub
         Sub OnContactsMouseUp(ByVal sender As Object, ByVal e As MouseEventArgs)
             Dim args = DevExpress.Utils.DXMouseEventArgs.GetMouseArgs(e)
             If e.Button = MouseButtons.Right Then
                 Dim hitInfo = contactsTileView.CalcHitInfo(e.Location)
                 If hitInfo.HitTest = TileControlHitTest.Item Then
-                    Dim size = ScaleDPI.ScaleSize(New Size(192, 130))
+                    Dim size = ScaleDPI.ScaleSize(New Size(212, 130))
                     Dim location = New Point(e.X - size.Width \ 2, e.Y - size.Height + ScaleDPI.ScaleVertical(8))
                     Dim menuScreenBounds = gridControl.RectangleToScreen(New Rectangle(location, size))
                     contactMenuPopup.Show(gridControl, menuScreenBounds)
@@ -97,12 +132,12 @@ Namespace DXHtmlMessengerSample.Views
         Sub OnContactItemTemplateCustomize(ByVal sender As Object, ByVal e As TileViewItemCustomizeEventArgs) Handles contactsTileView.ItemCustomize
             Dim contact = TryCast(contactsTileView.GetRow(e.RowHandle), Contact)
             If contact IsNot Nothing Then
-                Dim statusBadge = e.HtmlElementInfo.FindElementById("statusBadge")
+                Dim statusBadge = e.HtmlElement.FindElementById("statusBadge")
                 If statusBadge IsNot Nothing AndAlso (Not contact.IsInactive) Then
                     statusBadge.Style.SetBackgroundColor("@Green")
                 End If
                 If Not contact.HasUnreadMessages Then
-                    Dim unreadBadge = e.HtmlElementInfo.FindElementById("unreadBadge")
+                    Dim unreadBadge = e.HtmlElement.FindElementById("unreadBadge")
                     If unreadBadge IsNot Nothing Then
                         unreadBadge.Hidden = True
                     End If

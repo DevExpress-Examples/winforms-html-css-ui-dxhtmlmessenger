@@ -42,14 +42,17 @@
                     await DispatcherService?.BeginInvoke(RaiseContactChanged);
             }
         }
+        HashSet<int> updatedMessagesIdices = new HashSet<int>();
         async void OnMessageEvents(Dictionary<long, MessageEvent> events) {
-            MessageEvent @event;
+            updatedMessagesIdices.Clear();
+            MessageEvent @event = null; int index = 0;
             foreach(Message message in Messages) {
-                if(events.TryGetValue(message.ID, out @event))
+                if(events.TryGetValue(message.ID, out @event) && updatedMessagesIdices.Add(index)) 
                     @event.Apply(message);
+                index++;
             }
             if(events.Count > 0)
-                await DispatcherService?.BeginInvoke(RaiseMessagesChanged);
+                await DispatcherService?.BeginInvoke(RaiseMessagesUpdated);
         }
         void UpdateUIOnChannelReady() {
             this.RaisePropertyChanged(x => x.Messages);
@@ -57,6 +60,10 @@
         }
         void RaiseMessagesChanged() {
             this.RaisePropertyChanged(x => x.Messages);
+        }
+        void RaiseMessagesUpdated() {
+            this.RaisePropertyChanged(x => x.UpdatedMessageIndices);
+            updatedMessagesIdices.Clear();
         }
         async void OnContact(Contact contact) {
             await LoadMessages(Channel, contact);
@@ -91,6 +98,9 @@
         public virtual IReadOnlyCollection<Message> Messages {
             get;
             protected set;
+        }
+        public IReadOnlyCollection<int> UpdatedMessageIndices {
+            get { return updatedMessagesIdices.ToArray(); }
         }
         Message lastMessage;
         protected void OnMessagesChanged() {
@@ -145,6 +155,7 @@
         protected void OnSelectedMessageChanged() {
             this.RaiseCanExecuteChanged(x => x.DeleteMessage());
             this.RaiseCanExecuteChanged(x => x.CopyMessage());
+            this.RaiseCanExecuteChanged(x => x.CopyMessageText());
             this.RaiseCanExecuteChanged(x => x.LikeMessage());
         }
         public bool CanDeleteMessage() {
@@ -159,8 +170,7 @@
         }
         public void CopyMessage() {
             try {
-                string message =
-                    "[" + SelectedMessage.StatusText + "] " +
+                string message = "[" + SelectedMessage.StatusText + "] " +
                     SelectedMessage.Owner.UserName + System.Environment.NewLine +
                     SelectedMessage.Text;
                 System.Windows.Forms.Clipboard.SetText(message);
@@ -176,14 +186,14 @@
             }
             catch { }
         }
-        public bool CanLike() {
+        public bool CanLikeMessage() {
             return (SelectedMessage != null) && !SelectedMessage.IsLiked;
         }
         public void LikeMessage() {
             if(Channel != null)
                 Channel.Send(new LikeMessage(SelectedMessage.ID));
         }
-        [Command(isCommand: false)]
+        [Command(false)]
         public void OnMessageRead(Message message) {
             if(lastMessage != null && message == lastMessage) {
                 lastMessage = null;

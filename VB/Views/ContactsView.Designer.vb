@@ -81,7 +81,9 @@
             Me.searchControl.Name = "searchControl"
             Me.searchControl.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
             Me.searchControl.Properties.Client = Me.gridControl
-            Me.searchControl.Properties.ShowClearButton = False
+            Me.searchControl.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {
+                New DevExpress.XtraEditors.Repository.ClearButton()
+            })
             Me.searchControl.Properties.ShowSearchButton = False
             Me.searchControl.Size = New System.Drawing.Size(179, 18)
             Me.searchControl.TabIndex = 0
@@ -129,7 +131,7 @@
             ' 
             ' contactTooltip
             ' 
-            Me.contactTooltip.AutoHidingDelay = 2500
+            Me.contactTooltip.AutoHidingDelay = 1500
             Me.contactTooltip.ContainerControl = Me
             Me.contactTooltip.HideOnElementClick = DevExpress.Utils.DefaultBoolean.True
             Me.contactTooltip.HideAutomatically = DevExpress.Utils.DefaultBoolean.True

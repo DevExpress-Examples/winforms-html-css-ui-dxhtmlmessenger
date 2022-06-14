@@ -44,15 +44,19 @@ Namespace DXHtmlMessengerSample.ViewModels
                 End If
             End If
         End Sub
+        Dim updatedMessagesIdicesCore As HashSet(Of Integer) = New HashSet(Of Integer)
         Async Sub OnMessageEvents(ByVal events As Dictionary(Of Long, MessageEvent))
+            updatedMessagesIdicesCore.Clear()
             Dim [event] As MessageEvent = Nothing
+            Dim index As Integer = 0
             For Each message As Message In Messages
-                If events.TryGetValue(message.ID, [event]) Then
+                If events.TryGetValue(message.ID, [event]) And updatedMessagesIdicesCore.Add(index) Then
                     [event].Apply(message)
                 End If
+                index = index + 1
             Next message
             If events.Count > 0 Then
-                Await DispatcherService?.BeginInvoke(AddressOf RaiseMessagesChanged)
+                Await DispatcherService?.BeginInvoke(AddressOf RaiseMessagesUpdated)
             End If
         End Sub
         Sub UpdateUIOnChannelReady()
@@ -61,6 +65,10 @@ Namespace DXHtmlMessengerSample.ViewModels
         End Sub
         Sub RaiseMessagesChanged()
             Me.RaisePropertyChanged(Function(x) x.Messages)
+        End Sub
+        Sub RaiseMessagesUpdated()
+            Me.RaisePropertyChanged(Function(x) x.UpdatedMessageIndices)
+            updatedMessagesIdicesCore.Clear()
         End Sub
         Async Sub OnContact(ByVal contact As Contact)
             Await LoadMessages(Channel, contact)
@@ -90,6 +98,11 @@ Namespace DXHtmlMessengerSample.ViewModels
             Me.RaiseCanExecuteChanged(Sub(x) x.ShowUser())
         End Sub
         Public Overridable Property Messages() As IReadOnlyCollection(Of Message)
+        Public ReadOnly Property UpdatedMessageIndices() As IReadOnlyCollection(Of Integer)
+            Get
+                Return updatedMessagesIdicesCore.ToArray()
+            End Get
+        End Property
         Private lastMessage As Message
         Protected Sub OnMessagesChanged()
             lastMessage = Messages.LastOrDefault()
@@ -138,6 +151,7 @@ Namespace DXHtmlMessengerSample.ViewModels
         Protected Sub OnSelectedMessageChanged()
             Me.RaiseCanExecuteChanged(Sub(x) x.DeleteMessage())
             Me.RaiseCanExecuteChanged(Sub(x) x.CopyMessage())
+            Me.RaiseCanExecuteChanged(Sub(x) x.CopyMessageText())
             Me.RaiseCanExecuteChanged(Sub(x) x.LikeMessage())
         End Sub
         Public Function CanDeleteMessage() As Boolean
@@ -167,7 +181,7 @@ Namespace DXHtmlMessengerSample.ViewModels
             Catch
             End Try
         End Sub
-        Public Function CanLike() As Boolean
+        Public Function CanLikeMessage() As Boolean
             Return (SelectedMessage IsNot Nothing) AndAlso Not SelectedMessage.IsLiked
         End Function
         Public Sub LikeMessage()

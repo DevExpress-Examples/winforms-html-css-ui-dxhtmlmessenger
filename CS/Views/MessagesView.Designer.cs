@@ -74,6 +74,7 @@ namespace DXHtmlMessengerSample.Views {
             // 
             this.tablePanel.SetColumn(this.typingBox, 0);
             this.typingBox.Controls.Add(this.messageEdit);
+            this.typingBox.AutoScroll = false;
             this.typingBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.typingBox.Location = new System.Drawing.Point(0, 540);
             this.typingBox.Margin = new System.Windows.Forms.Padding(0);
@@ -168,6 +169,7 @@ namespace DXHtmlMessengerSample.Views {
             this.messageEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.messageBindingSource, "MessageText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.messageEdit.Location = new System.Drawing.Point(149, 3);
             this.messageEdit.Name = "messageEdit";
+            this.messageEdit.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10.25F);
             this.messageEdit.Properties.NullValuePrompt = "Type your message here...";
             this.messageEdit.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.messageEdit.Properties.UseAdvancedMode = DevExpress.Utils.DefaultBoolean.True;

@@ -44,6 +44,7 @@
 	min-width: 128px;
 	min-height: 128px;
 	border-radius: 100px;
+	border: 1px solid @WindowText/0.1;
 }
 
 .name {
