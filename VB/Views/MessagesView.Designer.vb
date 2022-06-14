@@ -72,6 +72,7 @@
             ' typingBox
             ' 
             Me.tablePanel.SetColumn(Me.typingBox, 0)
+            Me.typingBox.AutoScroll = False
             Me.typingBox.Controls.Add(Me.messageEdit)
             Me.typingBox.Dock = System.Windows.Forms.DockStyle.Fill
             Me.typingBox.Location = New System.Drawing.Point(0, 540)
@@ -158,6 +159,7 @@
             ' memoEdit1
             ' 
             Me.messageEdit.DataBindings.Add(New System.Windows.Forms.Binding("EditValue", Me.messageBindingSource, "MessageText", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+            Me.messageEdit.Properties.Appearance.Font = New System.Drawing.Font("Tahoma", 10.25F)
             Me.messageEdit.Location = New System.Drawing.Point(149, 3)
             Me.messageEdit.Name = "messageEdit"
             Me.messageEdit.Properties.NullValuePrompt = "Type your message here..."

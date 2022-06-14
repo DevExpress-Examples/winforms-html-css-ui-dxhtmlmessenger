@@ -187,11 +187,11 @@ The application handles the [TileView.ItemCustomize](https://docs.devexpress.com
 void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArgs e) {
     var contact = contactsTileView.GetRow(e.RowHandle) as Contact;
     if(contact != null) {
-        var statusBadge = e.HtmlElementInfo.FindElementById("statusBadge");
+        var statusBadge = e.HtmlElement.FindElementById("statusBadge");
         if(statusBadge != null && !contact.IsInactive)
             statusBadge.Style.SetBackgroundColor("@Green");
         if(!contact.HasUnreadMessages) {
-            var unreadBadge = e.HtmlElementInfo.FindElementById("unreadBadge");
+            var unreadBadge = e.HtmlElement.FindElementById("unreadBadge");
             if(unreadBadge != null)
                 unreadBadge.Hidden = true;
         }
@@ -202,12 +202,12 @@ void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArg
 Sub OnContactItemTemplateCustomize(ByVal sender As Object, ByVal e As TileViewItemCustomizeEventArgs) Handles contactsTileView.ItemCustomize
     Dim contact = TryCast(contactsTileView.GetRow(e.RowHandle), Contact)
     If contact IsNot Nothing Then
-        Dim statusBadge = e.HtmlElementInfo.FindElementById("statusBadge")
+        Dim statusBadge = e.HtmlElement.FindElementById("statusBadge")
         If statusBadge IsNot Nothing AndAlso (Not contact.IsInactive) Then
             statusBadge.Style.SetBackgroundColor("@Green")
         End If
         If Not contact.HasUnreadMessages Then
-            Dim unreadBadge = e.HtmlElementInfo.FindElementById("unreadBadge")
+            Dim unreadBadge = e.HtmlElement.FindElementById("unreadBadge")
             If unreadBadge IsNot Nothing Then
                 unreadBadge.Hidden = True
             End If
@@ -295,11 +295,11 @@ void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeIte
     if(message == null || message.IsFirstMessageOfBlock)
         return;
     if(!message.IsOwnMessage) {
-        var avatar = e.ElementInfo.FindElementById("avatar");
+        var avatar = e.Element.FindElementById("avatar");
         if(avatar != null)
             avatar.Hidden = true;
     }
-    var name = e.ElementInfo.FindElementById("name");
+    var name = e.Element.FindElementById("name");
     if(name != null)
         name.Hidden = true;
     if(!message.IsFirstMessageOfReply) {
@@ -316,17 +316,17 @@ Sub OnCustomizeItem(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views
         Return
     End If
     If Not message.IsOwnMessage Then
-        Dim avatar = e.ElementInfo.FindElementById("avatar")
+        Dim avatar = e.Element.FindElementById("avatar")
         If avatar IsNot Nothing Then
             avatar.Hidden = True
         End If
     End If
-    Dim name = e.ElementInfo.FindElementById("name")
+    Dim name = e.Element.FindElementById("name")
     If name IsNot Nothing Then
         name.Hidden = True
     End If
     If Not message.IsFirstMessageOfReply Then
-        Dim sent = e.ElementInfo.FindElementById("sent")
+        Dim sent = e.Element.FindElementById("sent")
         If sent IsNot Nothing Then
             sent.Hidden = True
         End If

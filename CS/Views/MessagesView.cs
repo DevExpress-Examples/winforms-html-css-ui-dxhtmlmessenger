@@ -1,8 +1,12 @@
 ﻿namespace DXHtmlMessengerSample.Views {
+    using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using DevExpress.Utils.Html;
+    using DevExpress.Utils.Html.Internal;
     using DevExpress.XtraEditors;
     using DevExpress.XtraEditors.Controls;
+    using DevExpress.XtraGrid.Views.Items;
     using DXHtmlMessengerSample.ViewModels;
 
     public partial class MessagesView : XtraUserControl {
@@ -29,7 +33,8 @@
             fluent.SetBinding(toolbarPanel, tp => tp.DataContext, x => x.Contact);
             // We need update chat when the ViewModel detect changes
             fluent.SetTrigger(x => x.Messages, contacts => messagesItemsView.RefreshData());
-            fluent.SetTrigger(x => x.Contact, contact => messagesItemsView.ScrollToEnd());
+            fluent.SetTrigger(x => x.UpdatedMessageIndices, indices => messagesItemsView.RefreshData(indices));
+            fluent.SetTrigger(x => x.Contact, contact => messagesItemsView.MoveLast());
             // Bind life-cycle events
             fluent.WithEvent(this, nameof(HandleCreated))
                 .EventToCommand(x => x.OnCreate);
@@ -53,27 +58,46 @@
             fluent.BindCommandToElement(messageMenuPopup, "miDelete", x => x.DeleteMessage);
             // Bind popup menu showing/hiding
             messagesItemsView.ElementMouseClick += OnMessagesViewElementMouseClick;
+            messagesItemsView.TopRowPixelChanged += OnMessagesTopRowPixelChanged;
+            messageMenuPopup.Hidden += OnMessageMenuPopupHidden;
         }
-        void OnMessagesViewElementMouseClick(object sender, DevExpress.XtraGrid.Views.Items.ItemsViewHtmlElementMouseEventArgs e) {
+        CssStyle activeMoreStyle;
+        void OnMessagesViewElementMouseClick(object sender, ItemsViewHtmlElementMouseEventArgs e) {
             if(e.ElementId == "btnMore") {
-                var size = ScaleDPI.ScaleSize(new Size(192, 180));
+                activeMoreStyle = e.Element.Style;
+                activeMoreRowHandle = e.RowHandle;
+                activeMoreStyle.SetProperty("opacity", "1");
+            }
+            if(e.ElementId == "btnMore" || e.ElementId == "btnLike")
+                ShowMenu(e);
+        }
+        void ShowMenu(ItemsViewHtmlElementMouseEventArgs e) {
+            var size = ScaleDPI.ScaleSize(new Size(212, 180));
                 var location = new Point(
                     e.Bounds.X - (size.Width - e.Bounds.Width) / 2,
                     e.Bounds.Y - size.Height + ScaleDPI.ScaleVertical(8));
-                var menuScreenBounds = gridControl.RectangleToScreen(new Rectangle(location, size));
-                messageMenuPopup.Show(gridControl, menuScreenBounds);
-            }
+            messageMenuPopup.Show(gridControl, gridControl.RectangleToScreen(new Rectangle(location, size)));
+        }
+        void OnMessagesTopRowPixelChanged(object sender, EventArgs e) {
+            messageMenuPopup.Hide();
+        }
+        int? activeMoreRowHandle;
+        void OnMessageMenuPopupHidden(object sender, EventArgs e) {
+            activeMoreStyle = null;
+            if(activeMoreRowHandle.HasValue)
+                messagesItemsView.RefreshRow(activeMoreRowHandle.Value);
+            activeMoreRowHandle = null;
         }
         void InitializeMessageEdit() {
             var autoHeightEdit = messageEdit as IAutoHeightControlEx;
             autoHeightEdit.AutoHeightEnabled = true;
             autoHeightEdit.HeightChanged += OnMessageHeightChanged;
         }
-        void OnMessageHeightChanged(object sender, System.EventArgs e) {
+        void OnMessageHeightChanged(object sender, EventArgs e) {
             var contentSize = typingBox.GetContentSize();
             typingBox.Height = contentSize.Height;
         }
-        void OnQueryItemTemplate(object sender, DevExpress.XtraGrid.Views.Items.QueryItemTemplateEventArgs e) {
+        void OnQueryItemTemplate(object sender, QueryItemTemplateEventArgs e) {
             var message = e.Row as DevExpress.DevAV.Chat.Model.Message;
             if(message == null)
                 return;
@@ -84,20 +108,30 @@
             var fluent = mvvmContext.OfType<MessagesViewModel>();
             fluent.ViewModel.OnMessageRead(message);
         }
-        void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeItemArgs e) {
+        void OnCustomizeItem(object sender, CustomizeItemArgs e) {
             var message = e.Row as DevExpress.DevAV.Chat.Model.Message;
-            if(message == null || message.IsFirstMessageOfBlock)
+            if(message == null)
+                return;
+            if(message.IsLiked) {
+                var btnLike = e.Element.FindElementById("btnLike");
+                var btnMore = e.Element.FindElementById("btnMore");
+                if(btnLike != null && btnMore != null) {
+                    btnLike.Hidden = false;
+                    btnMore.Hidden = true;
+                }
+            }
+            if(message.IsFirstMessageOfBlock)
                 return;
             if(!message.IsOwnMessage) {
-                var avatar = e.ElementInfo.FindElementById("avatar");
+                var avatar = e.Element.FindElementById("avatar");
                 if(avatar != null)
-                    avatar.Hidden = true;
+                    avatar.Style.SetVisibility(CssVisibility.Hidden);
             }
-            var name = e.ElementInfo.FindElementById("name");
+            var name = e.Element.FindElementById("name");
             if(name != null)
                 name.Hidden = true;
             if(!message.IsFirstMessageOfReply) {
-                var sent = e.ElementInfo.FindElementById("sent");
+                var sent = e.Element.FindElementById("sent");
                 if(sent != null)
                     sent.Hidden = true;
             }

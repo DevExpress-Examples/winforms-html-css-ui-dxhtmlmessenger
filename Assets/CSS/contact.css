@@ -4,7 +4,7 @@
 	color: @WindowText;
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	align-items: stretch;
 }
 
 .container {
@@ -21,7 +21,7 @@
 	border-bottom: solid 1px @WindowText/0.1;
 }
 
-body:select .border {
+:root:select .border {
 	border-top: solid 0px @Window;
 	border-bottom: solid 2px @Highlight;
 }
@@ -64,27 +64,34 @@ body:select .border {
 .name {
 	font-size: 18px;
 	line-height: 24px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .info {
 	margin-left: 4px;
+	min-width: 16px;
 	width: 16px;
 	height: 16px;
 	opacity: 0;
 }
 
 .contact-info:hover .info {
-	opacity: 0.25;
+	opacity: 0.5;
 }
 
 .contact-info .info:hover {
-	opacity: 0.5;
+	opacity: 1.0;
 }
 
 .time {
 	color: @DisabledText;
 	font-size: 12px;
 	line-height: 18px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .badge {
@@ -96,7 +103,6 @@ body:select .border {
 	border-radius: 100px;
 	background-color: @Highlight;
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }

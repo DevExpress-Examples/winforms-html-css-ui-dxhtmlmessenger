@@ -1,5 +1,5 @@
 .typingBox {
-	padding: 0px 10px 10px 10px;
+	padding: 0px 16px 16px 16px;
 	background-color: @Control;
 }
 
@@ -11,7 +11,7 @@
 	align-items: center;
 	justify-content: space-between;
 	align-self: center;
-	padding: 5px 10px 5px 10px;
+	padding: 5px 8px 5px 13px;
 	border-style: solid;
 	border-color: @WindowText/0.2;
 	border-width: 1px;
@@ -25,17 +25,15 @@
 
 .separator-Container {
 	width: 1px;
-	min-height: 36px;
+	height: 39px;
 	background-color: @WindowText/0.1;
-	margin: 4px 8px 4px 8px;
+	margin: 6px 16px;
 }
 
 .button {
-	width: 20px;
-	height: 20px;
-	min-width: 20px;
+	width: 23px;
+	height: 23px;
 	padding: 8px;
-	margin-left: 2px;
 	opacity:0.5;
 }
 

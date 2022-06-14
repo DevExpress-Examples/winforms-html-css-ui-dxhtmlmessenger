@@ -1,5 +1,5 @@
 .container {
-	width: 160px;
+	width: 180px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -15,7 +15,7 @@
 	background-color: @Window;
 	color: @WindowText;
 	border-radius: 8px;
-	padding: 8px;
+	padding: 16px;
 	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -23,7 +23,7 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	padding: 12px;
+	padding: 8px 16px;
 	font-size: 14px;
 	line-height: 21px;
 }
@@ -39,7 +39,7 @@
 	}
 
 .separator {
-	border-bottom: solid 1px @WindowText/0.2;
+	border-bottom: solid 1px @WindowText/0.1;
 	margin: 4px 0px;
 	display: flex;
 	align-self: stretch;

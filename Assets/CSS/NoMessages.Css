@@ -9,3 +9,8 @@
     font-size: 12px;
     line-height: 18px;
 }
+.noMessagesHeader {
+	color: @ControlText;
+	font-size: 14px;
+}
+
