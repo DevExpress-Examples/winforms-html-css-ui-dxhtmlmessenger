@@ -62,16 +62,15 @@ The following snippet from the [typingbox.css](../Assets/CSS/typingbox.css) file
 
 ```css
 .button {
-	width: 20px;
-	height: 20px;
-	min-width: 20px;
+	width: 23px;
+	height: 23px;
 	padding: 8px;
-	margin-left: 2px;
-	opacity: 0.5;
+	opacity:0.5;
 }
+
 	.button:hover {
 		border-radius: 4px;
-		background-color: #F2F2F2;
+		background-color: @Control;
 	}
 ```
 
@@ -82,7 +81,7 @@ fluent.BindCommandToElement(typingBox, "btnSend", x => x.SendMessage);
 //...
 public void SendMessage() {
     if(Channel != null)
-        Channel.Send(new NewMessage(Contact, MessageText));
+        Channel.Send(new AddMessage(Contact, MessageText));
     MessageText = null;
 }
 ```
@@ -111,13 +110,13 @@ The HTML code from the [toolbar.html](../Assets/Html/toolbar.html) file is shown
 <div class='toolBar'>
     <div class='contactName'>${UserName}</div>
     <div class='buttonPanel'>
-        <img id="btnPhoneCall" src='PhoneCall' class='button' />
-        <img id="btnVideoCall" src='VideoCall' class='button' />
-        <img id="btnContact" src='Contact' class='button' />
+        <img id="btnPhoneCall" src='PhoneCall' class='button' title="Phone Call" />
+        <img id="btnVideoCall" src='VideoCall' class='button' title="Video Call"/>
+        <img id="btnContact" src='Contact' class='button' title="Show Contact Info"/>
         <div class='separator-Container'>
             <div class='separator'></div>
         </div>
-        <img id="btnUser" src='User' class='button' />
+        <img id="btnUser" src='User' class='button' title="Show User Info"/>
     </div>
 </div>
 ```
@@ -157,9 +156,9 @@ The HTML code from the [contact.html](../Assets/Html/contact.html) file is shown
 <div class="contact">
     <div class="avatar-container">
         <img src="${Avatar}" class="avatar" />
-        <div id="statusBadge" class="status" />
+        <div id="statusBadge" class="status"></div>
     </div>
-    <div>
+    <div style="flex-grow:1;">
         <div class="container">
             <div class="contact-info">
                 <div class="nameAndInfo">
@@ -196,7 +195,7 @@ void OnContactItemTemplateCustomize(object sender, TileViewItemCustomizeEventArg
                 unreadBadge.Hidden = true;
         }
     }
-}                                                                                    
+}                                                                                  
 ```
 ```vb
 Sub OnContactItemTemplateCustomize(ByVal sender As Object, ByVal e As TileViewItemCustomizeEventArgs) Handles contactsTileView.ItemCustomize
@@ -242,6 +241,7 @@ The HTML code from the [message.html](../Assets/Html/message.html) file is shown
         <div class="textAndMore">
             <div class='text'>${Text}</div>
             <img id="btnMore" class='more' src='Menu' />
+            <img id="btnLike" class='like' src='Like' hidden />
         </div>
     </div>
 </div>
@@ -290,35 +290,56 @@ End Sub
 The application handles the [ItemsView.CustomizeItem](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView.CustomizeItem) event to dynamically customize individual elements of items.
 
 ```cs
-void OnCustomizeItem(object sender, DevExpress.XtraGrid.Views.Items.CustomizeItemArgs e) {
+void OnCustomizeItem(object sender, CustomizeItemArgs e) {
     var message = e.Row as DevExpress.DevAV.Chat.Model.Message;
-    if(message == null || message.IsFirstMessageOfBlock)
+    if(message == null)
+        return;
+    if(message.IsLiked) {
+        var btnLike = e.Element.FindElementById("btnLike");
+        var btnMore = e.Element.FindElementById("btnMore");
+        if(btnLike != null && btnMore != null) {
+            btnLike.Hidden = false;
+            btnMore.Hidden = true;
+        }
+    }
+    if(message.IsFirstMessageOfBlock)
         return;
     if(!message.IsOwnMessage) {
         var avatar = e.Element.FindElementById("avatar");
         if(avatar != null)
-            avatar.Hidden = true;
+            avatar.Style.SetVisibility(CssVisibility.Hidden);
     }
     var name = e.Element.FindElementById("name");
     if(name != null)
         name.Hidden = true;
     if(!message.IsFirstMessageOfReply) {
-        var sent = e.ElementInfo.FindElementById("sent");
+        var sent = e.Element.FindElementById("sent");
         if(sent != null)
             sent.Hidden = true;
     }
 }
 ```
 ```vb
-Sub OnCustomizeItem(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Items.CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
+Sub OnCustomizeItem(ByVal sender As Object, ByVal e As CustomizeItemArgs) Handles messagesItemsView.CustomizeItem
     Dim message = TryCast(e.Row, DevExpress.DevAV.Chat.Model.Message)
     If message Is Nothing OrElse message.IsFirstMessageOfBlock Then
+        Return
+    End If
+    If message.IsLiked Then
+        Dim btnLike = e.Element.FindElementById("btnLike")
+        Dim btnMore = e.Element.FindElementById("btnMore")
+        If btnLike IsNot Nothing And btnMore IsNot Nothing Then
+            btnLike.Hidden = False
+            btnMore.Hidden = True
+        End If
+    End If
+    If message.IsFirstMessageOfBlock Then
         Return
     End If
     If Not message.IsOwnMessage Then
         Dim avatar = e.Element.FindElementById("avatar")
         If avatar IsNot Nothing Then
-            avatar.Hidden = True
+            avatar.Style.SetVisibility(CssVisibility.Hidden)
         End If
     End If
     Dim name = e.Element.FindElementById("name")

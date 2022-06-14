@@ -61,30 +61,14 @@ The in-memory server is registered at startup, as follows.
 ```cs
 static Program() {
     // Register global dependencies
-    Data.DevAVEmpployeesInMemoryServer.Register();
-}
-...
-sealed partial class DevAVEmpployeesInMemoryServer : IMessageServer {
-    public static void Register() {
-        Func<DevExpress.DevAV.DevAVDb> createDB = () => new DevExpress.DevAV.DevAVDb();
-        DevExpress.Mvvm.ServiceContainer.Default.RegisterService(new DevAVEmpployeesInMemoryServer(createDB));
-    }
+    DevExpress.Mvvm.ServiceContainer.Default.RegisterService(new DevExpress.DevAV.Chat.DevAVEmpployeesInMemoryServer(createDB));
 }
 ```
 ```vb
 Shared Sub New()
     ' Register global dependencies
-    Data.DevAVEmpployeesInMemoryServer.Register()
+    DevExpress.Mvvm.ServiceContainer.Default.RegisterService(New DevExpress.DevAV.Chat.DevAVEmpployeesInMemoryServer(createDB))
 End Sub
-'...
-Friend NotInheritable Partial Class DevAVEmpployeesInMemoryServer
-    Implements IMessageServer
-
-    Public Shared Sub Register()
-        Dim createDB As Func(Of DevExpress.DevAV.DevAVDb) = Function() New DevExpress.DevAV.DevAVDb()
-        DevExpress.Mvvm.ServiceContainer.Default.RegisterService(New DevAVEmpployeesInMemoryServer(createDB))
-    End Sub
-End Class
 ```
 
 If you create your own implementation of the data layer, register it here.
@@ -157,12 +141,14 @@ Data is retrieved from the server when the channel is ready, and then it is disp
 
 ```cs
 protected override async void OnChannelReady() {
-    Contacts = await Channel.GetContacts();
+    var channelContacts = await Channel.GetContacts();
+    await DispatcherService?.BeginInvoke(() => Contacts = channelContacts);
 }
 ```
 ```vb
 Protected Overrides Async Sub OnChannelReady()
-    Contacts = Await Channel.GetContacts()
+    Dim channelContacts = Await Channel.GetContacts()
+    Await DispatcherService?.BeginInvoke(Sub() Contacts = channelContacts)
 End Sub
 ```
 
@@ -171,24 +157,34 @@ You can request data again when a specific server-side event is received.
 ```cs
 channel.Subscribe(OnMessageEvents);
 //...
-void OnMessageEvents(Dictionary<long, MessageEvent> events) {
-    MessageEvent @event;
+async void OnMessageEvents(Dictionary<long, MessageEvent> events) {
+    updatedMessagesIdices.Clear();
+    MessageEvent @event = null; int index = 0;
     foreach(Message message in Messages) {
-        if(events.TryGetValue(message.ID, out @event))
+        if(events.TryGetValue(message.ID, out @event) && updatedMessagesIdices.Add(index)) 
             @event.Apply(message);
+        index++;
     }
+    if(events.Count > 0)
+        await DispatcherService?.BeginInvoke(RaiseMessagesUpdated);
 }
 ```
 ```vb
-channel.Subscribe(OnMessageEvents)
+channel.Subscribe(AddressOf OnMessageEvents)
 '...
-Private Sub OnMessageEvents(ByVal events As Dictionary(Of Long, MessageEvent))
+Async Sub OnMessageEvents(ByVal events As Dictionary(Of Long, MessageEvent))
+    updatedMessagesIdicesCore.Clear()
     Dim [event] As MessageEvent = Nothing
+    Dim index As Integer = 0
     For Each message As Message In Messages
-        If events.TryGetValue(message.ID, [event]) Then
+        If events.TryGetValue(message.ID, [event]) And updatedMessagesIdicesCore.Add(index) Then
             [event].Apply(message)
         End If
+        index = index + 1
     Next message
+    If events.Count > 0 Then
+        Await DispatcherService?.BeginInvoke(AddressOf RaiseMessagesUpdated)
+    End If
 End Sub
 ```
 
@@ -229,8 +225,16 @@ When a client receives the _CredentialsRequiredEvent_ event, it should call the 
 void OnChannelEvent(ChannelEvent @event) {
     var credentialsRequired = @event as CredentialsRequiredEvent;
     if(credentialsRequired != null) {
-        var query = AccessTokenQuery(@event.UserName, credentialsRequired.Salt);
-        credentialsRequired.SetAccessTokenQuery(query);
+        if(0 == authCounter++) {
+            // provide the access token from local cache without interaction
+            var cacheQuery = QueryAccessTokenFromLocalAuthCache(@event.UserName, credentialsRequired.Salt);
+            credentialsRequired.SetAccessTokenQuery(cacheQuery);
+        }
+        else {
+            // or query access-token asynchronously for the specific user
+            var userQuery = QueryAccessTokenFromUser(@event.UserName, credentialsRequired.Salt);
+            credentialsRequired.SetAccessTokenQuery(userQuery);
+        }
     }
 }
 ```
@@ -238,8 +242,16 @@ void OnChannelEvent(ChannelEvent @event) {
 Sub OnChannelEvent(ByVal [event] As ChannelEvent)
     Dim credentialsRequired = TryCast([event], CredentialsRequiredEvent)
     If credentialsRequired IsNot Nothing Then
-        Dim query = AccessTokenQuery([event].UserName, credentialsRequired.Salt)
-        credentialsRequired.SetAccessTokenQuery(query)
+        AuthCounter += 1
+        If AuthCounter = 1 Then
+            ' provide the access token from local cache without interaction
+            Dim cacheQuery = QueryAccessTokenFromLocalAuthCache([event].UserName, credentialsRequired.Salt)
+            credentialsRequired.SetAccessTokenQuery(cacheQuery)
+        Else
+            ' or query access-token asynchronously for the specific user
+            Dim userQuery = QueryAccessTokenFromUser([event].UserName, credentialsRequired.Salt)
+            credentialsRequired.SetAccessTokenQuery(userQuery)
+        End If
     End If
 End Sub
 ```
@@ -300,6 +312,8 @@ async void OnContactEvents(Dictionary<long, ContactEvent> events) {
         if(events.TryGetValue(contact.ID, out @event))
             @event.Apply(contact);
     }
+    if(events.Count > 0)
+        await DispatcherService?.BeginInvoke(RaiseContactsChanged);
 }
 ```
 ```vb
@@ -310,6 +324,9 @@ Async Sub OnContactEvents(ByVal events As Dictionary(Of Long, ContactEvent))
             [event].Apply(contact)
         End If
     Next contact
+    If events.Count > 0 Then
+        Await DispatcherService?.BeginInvoke(AddressOf RaiseContactsChanged)
+    End If
 End Sub
 ```
 
@@ -319,12 +336,15 @@ Commands are sent from clients to the server. For example, a command can initiat
 
 ```cs
 public void LogOff() {
-    channel.Send(new LogOff(channel));
+    if(channel != null)
+        channel.Send(new LogOff(channel));
 }
 ```
 ```vb
 Public Sub LogOff()
-    channel.Send(New LogOff(channel))
+    If channel IsNot Nothing Then
+        channel.Send(New LogOff(channel))
+    End If
 End Sub
 ```
 
