@@ -152,27 +152,6 @@ In this application, HTML markup and CSS from the following files are used to re
 
 The HTML code from the [contact.html](../Assets/Html/contact.html) file is shown below:
 
-```html
-<div class="contact">
-    <div class="avatar-container">
-        <img src="${Avatar}" class="avatar" />
-        <div id="statusBadge" class="status"></div>
-    </div>
-    <div style="flex-grow:1;">
-        <div class="container">
-            <div class="contact-info">
-                <div class="nameAndInfo">
-                    <div class="name">${UserName}</div>
-                    <img src='Contact' class='info' id="info" />
-                </div>
-                <div class="time">${LastOnlineText}</div>
-            </div>
-            <div id="unreadBadge" class="badge">${UnreadCount}</div>
-        </div>
-        <div class='border'></div>
-    </div>
-</div>
-```
 
 #### Data Binding - Display Field Values
 
