@@ -4,7 +4,7 @@
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
 
-# DXHtmlMessenger WinForms Demo
+# WinForms Chat Client Demo (DXHtmlMessenger)
 
 DXHtmlMessenger is a Windows Forms demo that emulates a messenger app. It shows how to use DevExpress WinForms controls to build a desktop UI from HTML and CSS.
 
