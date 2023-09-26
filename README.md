@@ -47,7 +47,7 @@ The form's GUI is set up using the following DevExpress controls:
 - Data Grid's [TileView](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view) — Allows you to render its tiles from a specific template in HTML format, and apply CSS styles to tile elements.
 - Data Grid's [ItemsView](https://docs.devexpress.com/WindowsForms/DevExpress.XtraGrid.Views.Items.ItemsView) — Presents records from a data source as an item list. Each list item is rendered using an HTML-CSS template.
 
-The app demonstrates the [HtmlContentPopup](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup) component used to show specific information in popup windows (information about users, and popup menus). This component also renders a UI from an HTML-CSS template. It can also show data from a bound data context (a business object or data source item).
+The app demonstrates the [HtmlContentPopup](https://docs.devexpress.com/WindowsForms/DevExpress.XtraEditors.HtmlContentPopup) component used to show specific information in popup windows (information about users and popup menus). This component also renders a UI from an HTML-CSS template. It can also show data from a bound data context (a business object or data source item).
 
 ![popup-window](./Docs/Images/dxhtmlmessenger-popup-s.png)
 
@@ -59,9 +59,9 @@ See the following page for more information on how the application's UI is built
 
 
 ## Application Layers   
-The app uses the [MVVM pattern](https://docs.devexpress.com/WindowsForms/113955/build-an-application/winforms-mvvm) to separate the code into layers — Data Layer, Model and View (UI). This separation grants you multiple benefits, such as a more independent development process for both developers and designers, easier code testing, and simpler UI redesigns. The data layer uses a set of interfaces to interact with the Model and UI layers.
+The app uses the [MVVM pattern](https://docs.devexpress.com/WindowsForms/113955/build-an-application/winforms-mvvm) to separate the code into layers — Data Layer, Model, and View (UI). This separation grants you multiple benefits, such as a more independent development process for both developers and designers, easier code testing, and simpler UI redesigns. The data layer uses a set of interfaces to interact with the Model and UI layers.
   
-The example shows how to provide data to Views, handle user actions, and interact with the server (send and listen to commands). The current implementation of the data layer is in-memory storage that gets data from the sample DevAV database. 
+The example shows how to supply data to Views, handle user actions, and interact with the server (send and listen to commands). The current implementation of the data layer is in-memory storage that gets data from the sample DevAV database. 
 To communicate with any messenger app, you can replace the current implementation of the data layer with your own implementation. Modification of other layers is required if you want to extend text messaging with advanced features, like image and video support, calls, group chats, etc.
   
 See the following page for more information: [Work with data](./Docs/HowItWorksWithData.md)
