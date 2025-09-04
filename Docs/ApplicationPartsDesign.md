@@ -142,9 +142,9 @@ Buttons are added to the **HtmlContentControl** in the same way as described in 
 
 ![contact list](./Images/dxhtmlmessenger-contactlist.png)
 
-The contact list is implemented by the GridControl's [TileView](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#html-and-css-based-tile-template). Each record (contact) in a **TileView** is a tile—a non-editable box that arranges fields based on a specific template. The **TileView** allows you to set the tile template in two ways:
+The contact list is implemented by the GridControl's [TileView](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#html-amp-css-based-template). Each record (contact) in a **TileView** is a tile—a non-editable box that arranges fields based on a specific template. The **TileView** allows you to set the tile template in two ways:
 - In HTML format (as demonstrated in the current application).
-- Using the common Table Layout concept (see [Tile View Template](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#create-tile-template)).
+- Using the common Table Layout concept (see [Tile View Template](https://docs.devexpress.com/WindowsForms/114728/controls-and-libraries/data-grid/views/tile-view#create-a-tile-template)).
 
 In this application, HTML markup and CSS from the following files are used to render each tile: 
 
